@@ -2,8 +2,9 @@ import {useEffect, useState} from 'react';
 
 const HomeSearch = () => {
     const [query, setQuery] = useState('');
+    // [str, functinon] setquery is a setter for the query string
     const [mode, setMode] = useState<'course' | 'professor'>('course');
-
+    // same as above just different names with a type annotation
     const [results, setResults] = useState<any[]>([]);
 
     const endpoint = mode === 'course' ? '/api/courses/search' : '/api/professors/search';
@@ -16,12 +17,23 @@ const HomeSearch = () => {
         if (!query.trim()) return;
         try {
             const res = await fetch(`${endpoint}?q=${query}`);
-            const data = await res.json();
+            console.log(`${endpoint}?q=${query}`) // ?q= gets put into req.query.q
+            if (!res.ok) {
+                const errorText = await res.text();
+                console.error(`HTTP ${res.status}:`, errorText);
+                return;
+            }
+
+            const data = await res.json(); // safe to parse
+            console.log(data);
+
             setResults(data);
         } catch (err) {
+
             console.error('Search failed:', err);
         }
     };
+
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Tab' && results.length === 1) {
@@ -44,7 +56,7 @@ const HomeSearch = () => {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={mode === 'course' ? 'e.g. MAT137' : 'e.g. Smith'}
-                className="w-full max-w-md px-4 py-2 mb-4 text-black rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full max-w-md px-4 py-2 mb-4 text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
 
             <div className="flex items-center justify-center gap-8 mb-8">
@@ -78,13 +90,27 @@ const HomeSearch = () => {
             </div>
 
             {results.length > 0 && (
-                <ul className="w-full max-w-md bg-white text-black rounded-md shadow divide-y divide-gray-300">
-                    {results.map((item, idx) => (
-                        <li key={idx} className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => setQuery(item.name || item.course_code)}>
-                            {item.course_code ? `${item.course_code} - ${item.course_name}` : item.name}
-                        </li>
+                <div className="flex flex-col gap-4 overflow-y-auto h-96 w-full max-w-6xl bg-slate-800 text-white p-4 rounded-md shadow">
+                    {results.map((item) => (
+                        <div
+                            key={item.prof_id}
+                            className="flex flex-wrap gap-x-6 gap-y-2 bg-gray-800 px-4 py-2 rounded shadow hover:bg-gray-700"
+                        >
+                            {Object.entries(item)
+                                .filter(([key]) => key !== 'prof_id')
+                                .map(([key, value]) => {
+                                    const displayVal =
+                                        typeof value === 'number' ? value.toFixed(2) : String(value);
+                                    return (
+                                        <div key={key} className="whitespace-nowrap text-sm">
+                                            <strong>{key}:</strong> {displayVal}
+                                        </div>
+                                    );
+                                })}
+                        </div>
                     ))}
-                </ul>
+                </div>
+
             )}
         </div>
     );

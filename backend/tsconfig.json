@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",            // or "ESNext" if using `"type": "module"` in package.json
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,               // required for breakpoint debugging
+    "baseUrl": ".",                  // optional, for easier import paths
+    "outDir": "dist"                 // optional if using tsc
+  },
+  "include": ["src/**/*.ts"],        // or whatever your source folder is
+  "exclude": ["node_modules"]
+}
