@@ -14,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+debugger;
 app.use('/api/courses', courseRoutes);
 app.use('/api/professors', professorRoutes);
 

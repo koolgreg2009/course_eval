@@ -93,11 +93,11 @@ const HomeSearch = () => {
                 <div className="flex flex-col gap-4 overflow-y-auto h-96 w-full max-w-6xl bg-slate-800 text-white p-4 rounded-md shadow">
                     {results.map((item) => (
                         <div
-                            key={item.prof_id}
+                            key={item[0]}
                             className="flex flex-wrap gap-x-6 gap-y-2 bg-gray-800 px-4 py-2 rounded shadow hover:bg-gray-700"
                         >
                             {Object.entries(item)
-                                .filter(([key]) => key !== 'prof_id')
+                                .filter(([key]) => key !== 'prof_id' && key != 'course_id')
                                 .map(([key, value]) => {
                                     const displayVal =
                                         typeof value === 'number' ? value.toFixed(2) : String(value);

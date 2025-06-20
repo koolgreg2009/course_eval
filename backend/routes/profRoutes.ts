@@ -1,9 +1,10 @@
 import express from 'express';
 import {
-
-} from '../controllers/courseController';
+    getProfByCode
+} from '../controllers/profController';
 
 const router = express.Router();
-
+debugger;
+router.get('/search', getProfByCode);
 
 export default router;

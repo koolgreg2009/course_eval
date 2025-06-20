@@ -12,8 +12,8 @@ export const getCourseAggregateByCode = async (req: Request, res: Response): Pro
     try{
         const result = await db.query(
             `
-                SELECT o.prof_id, p.first_name, p.last_name, AVG(e.ins3) as INS3Avg, 
-                    AVG(e.ins6) AS INS6AVG, AVG(e.artsci3) AS ARTSCI3AVG, count(*) AS total_times_taught 
+                SELECT o.prof_id, CONCAT(p.first_name, ' ', p.last_name) AS name, AVG(e.ins3) as INS3Avg, 
+                    AVG(e.ins6) AS INS6AVG, AVG(e.artsci3) AS ARTSCI3AVG, count(*) AS times_taught 
                 FROM courses c JOIN offerings o on c.course_id = o.course_id JOIN evaluations e on o.offering_id = e.offering_id 
                     NATURAL JOIN professors p WHERE LOWER(c.code) LIKE LOWER($1) 
                 GROUP BY o.prof_id, p.first_name, p.last_name ORDER BY count(*) DESC;
