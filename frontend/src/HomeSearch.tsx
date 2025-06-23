@@ -6,17 +6,17 @@ const HomeSearch = () => {
     const [mode, setMode] = useState<'course' | 'professor'>('course');
     // same as above just different names with a type annotation
     const [results, setResults] = useState<any[]>([]);
+    const [evals, setEvals] = useState<any[]>([]);
+    const endpoint = mode === 'course' ? '/api/courses' : '/api/professors';
 
-    const endpoint = mode === 'course' ? '/api/courses/search' : '/api/professors/search';
-
-    useEffect(() => {
+    useEffect(() => { // this fires everytime component refreshes
         console.log('Current endpoint:', endpoint);
     }, [endpoint]);
 
     const handleSearch = async () => {
         if (!query.trim()) return;
         try {
-            const res = await fetch(`${endpoint}?q=${query}`);
+            const res = await fetch(`${endpoint}/code?q=${query}`);
             console.log(`${endpoint}?q=${query}`) // ?q= gets put into req.query.q
             if (!res.ok) {
                 const errorText = await res.text();
@@ -34,7 +34,11 @@ const HomeSearch = () => {
         }
     };
 
-
+    const fetchCourseEvals = async (id: number) => {
+        if (!evals[id]){
+            const res = await fetch(`${endpoint}/eval`)
+        }
+    }
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Tab' && results.length === 1) {
             setQuery(results[0].name || results[0].course_code);
@@ -90,26 +94,37 @@ const HomeSearch = () => {
             </div>
 
             {results.length > 0 && (
-                <div className="flex flex-col gap-4 overflow-y-auto h-96 w-full max-w-6xl bg-slate-800 text-white p-4 rounded-md shadow">
-                    {results.map((item) => (
+                <div className="join join-vertical bg-base-100">
+                    {results.map((item, idx) => ( // each item is a singular dict
                         <div
-                            key={item[0]}
-                            className="flex flex-wrap gap-x-6 gap-y-2 bg-gray-800 px-4 py-2 rounded shadow hover:bg-gray-700"
+                            key={idx}
+                            className="collapse collapse-arrow join-item border border-base-300"
                         >
-                            {Object.entries(item)
-                                .filter(([key]) => key !== 'prof_id' && key != 'course_id')
-                                .map(([key, value]) => {
-                                    const displayVal =
-                                        typeof value === 'number' ? value.toFixed(2) : String(value);
-                                    return (
-                                        <div key={key} className="whitespace-nowrap text-sm">
-                                            <strong>{key}:</strong> {displayVal}
-                                        </div>
-                                    );
-                                })}
+                            <input type="radio" name="my-accordion-4"  />
+                            <div className="collapse-title font-semibold">
+                                {item.prof_name || item.course}
+                            </div>
+                            <div className="collapse-content text-sm">A</div>
+                            <div className="collapse-content text-sm">
+                                <div className="flex flex-wrap gap-x-6 gap-y-2 bg-gray-800 px-4 py-2 rounded shadow hover:bg-gray-700">
+                                    {Object.entries(item)
+                                        .filter(([key]) => key !== 'prof_id' && key !== 'course_id')
+                                        .map(([key, value]) => {
+                                            const displayVal =
+                                                typeof value === 'number' ? value.toFixed(2) : String(value);
+                                            return (
+                                                <div key={key} className="whitespace-nowrap text-sm text-white">
+                                                    <strong>{key}:</strong> {displayVal}
+                                                </div>
+                                            );
+                                        })}
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
+
+
 
             )}
         </div>

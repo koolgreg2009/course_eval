@@ -23,6 +23,6 @@ router.use((req, res, next) => {
 });
 
 
-router.get('/search', getCourseAggregateByCode);
+router.get('/code', getCourseAggregateByCode);
 
 export default router;

@@ -5,6 +5,6 @@ import {
 
 const router = express.Router();
 debugger;
-router.get('/search', getProfByCode);
+router.get('/code', getProfByCode);
 
 export default router;
