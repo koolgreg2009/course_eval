@@ -63,35 +63,19 @@ const HomeSearch = () => {
                 className="w-full max-w-md px-4 py-2 mb-4 text-white rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
 
-            <div className="flex items-center justify-center gap-8 mb-8">
-                <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                        type="radio"
-                        name="mode"
-                        value="course"
-                        checked={mode === 'course'}
-                        onChange={() => {
-                            console.log('Changed to course');
-                            setMode('course')}}
-                        className="accent-blue-500"
-                    />
-                    Course
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                        type="radio"
-                        name="mode"
-                        value="professor"
-                        checked={mode === 'professor'}
-                        onChange={() => {
-                            console.log('Changed to professor');
-                            setMode('professor')
-                        }}
-                        className="accent-green-500"
-                    />
-                    Professor
-                </label>
-            </div>
+            <label className="swap swap-rotate mb-6">
+                <input
+                    type="checkbox"
+                    checked={mode == 'professor'}
+                    onChange={() => {
+                        setMode(mode == 'professor' ? 'course' : 'professor');
+                        console.log(`Changed to ${mode}`)
+                        }
+                    }
+                />
+                <span className="swap-on text-lg font-bold">Professor</span>
+                <span className="swap-off text-lg font-bold">Course</span>
+            </label>
 
             {results.length > 0 && (
                 <div className="join join-vertical bg-base-100">
