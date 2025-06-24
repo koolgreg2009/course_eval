@@ -1,44 +1,20 @@
 import {useEffect, useState} from 'react';
+import {useHomeSearch} from '../hooks/homeSearchHook';
 
 const HomeSearch = () => {
-    const [query, setQuery] = useState('');
-    // [str, functinon] setquery is a setter for the query string
     const [mode, setMode] = useState<'course' | 'professor'>('course');
-    // same as above just different names with a type annotation
-    const [results, setResults] = useState<any[]>([]);
-    const [evals, setEvals] = useState<any[]>([]);
-    const endpoint = mode === 'course' ? '/api/courses' : '/api/professors';
+    const {
+        query, setQuery,
+        results, setResults,
+        endpoint,
+        handleSearch
+    } = useHomeSearch(mode);
 
     useEffect(() => { // this fires everytime component refreshes
         console.log('Current endpoint:', endpoint);
     }, [endpoint]);
 
-    const handleSearch = async () => {
-        if (!query.trim()) return;
-        try {
-            const res = await fetch(`${endpoint}/code?q=${query}`);
-            console.log(`${endpoint}?q=${query}`) // ?q= gets put into req.query.q
-            if (!res.ok) {
-                const errorText = await res.text();
-                console.error(`HTTP ${res.status}:`, errorText);
-                return;
-            }
 
-            const data = await res.json(); // safe to parse
-            console.log(data);
-
-            setResults(data);
-        } catch (err) {
-
-            console.error('Search failed:', err);
-        }
-    };
-
-    const fetchCourseEvals = async (id: number) => {
-        if (!evals[id]){
-            const res = await fetch(`${endpoint}/eval`)
-        }
-    }
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Tab' && results.length === 1) {
             setQuery(results[0].name || results[0].course_code);
@@ -90,19 +66,20 @@ const HomeSearch = () => {
                             </div>
                             <div className="collapse-content text-sm">A</div>
                             <div className="collapse-content text-sm">
-                                <div className="flex flex-wrap gap-x-6 gap-y-2 bg-gray-800 px-4 py-2 rounded shadow hover:bg-gray-700">
-                                    {Object.entries(item)
-                                        .filter(([key]) => key !== 'prof_id' && key !== 'course_id')
-                                        .map(([key, value]) => {
-                                            const displayVal =
-                                                typeof value === 'number' ? value.toFixed(2) : String(value);
-                                            return (
-                                                <div key={key} className="whitespace-nowrap text-sm text-white">
-                                                    <strong>{key}:</strong> {displayVal}
-                                                </div>
-                                            );
-                                        })}
-                                </div>
+                                {/*<div className="flex flex-wrap gap-x-6 gap-y-2 bg-gray-800 px-4 py-2 rounded shadow hover:bg-gray-700">*/}
+                                {/*    {Object.entries(item)*/}
+                                {/*        .filter(([key]) => key !== 'prof_id' && key !== 'course_id')*/}
+                                {/*        .map(([key, value]) => {*/}
+                                {/*            const displayVal =*/}
+                                {/*                typeof value === 'number' ? value.toFixed(2) : String(value);*/}
+                                {/*            return (*/}
+                                {/*                <div key={key} className="whitespace-nowrap text-sm text-white">*/}
+                                {/*                    <strong>{key}:</strong> {displayVal}*/}
+                                {/*                </div>*/}
+                                {/*            );*/}
+                                {/*        })}*/}
+                                {/*</div>*/}
+
                             </div>
                         </div>
                     ))}
