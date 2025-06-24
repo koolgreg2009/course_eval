@@ -12,11 +12,11 @@ export const getCourseAggregateByCode = async (req: Request, res: Response): Pro
     try{
         const result = await db.query(
             `
-                SELECT o.prof_id, CONCAT(p.first_name, ' ', p.last_name) AS prof_name, AVG(e.ins3) as INS3Avg, 
+                SELECT c.course_id, o.prof_id, CONCAT(p.first_name, ' ', p.last_name) AS prof_name, AVG(e.ins3) as INS3Avg, 
                     AVG(e.ins6) AS INS6AVG, AVG(e.artsci3) AS ARTSCI3AVG, count(*) AS times_taught 
                 FROM courses c JOIN offerings o on c.course_id = o.course_id JOIN evaluations e on o.offering_id = e.offering_id 
                     NATURAL JOIN professors p WHERE LOWER(c.code) LIKE LOWER($1) 
-                GROUP BY o.prof_id, p.first_name, p.last_name ORDER BY count(*) DESC;
+                GROUP BY c.course_id, o.prof_id, p.first_name, p.last_name ORDER BY count(*) DESC;
             `,
             [`%${q}%`]
         );
@@ -38,28 +38,3 @@ export const getCourseAggregateByCode = async (req: Request, res: Response): Pro
 
 }
 
-export const getCourseEvalByCode = async (req: Request, res: Response) => {
-    /**
-     * Searches for a course by code, returning rows with the matching course.
-     * This express handler doesn't return, just sends a response in the res object
-     */
-    const {q} = req.query;
-
-    if (!q || typeof q !== 'string'){
-        return res.status(400).json({error: 'invalid query parameter `q`'});
-    }
-    try{
-        const result = await db.query(
-            `
-            
-            `
-        );
-
-    } catch (err){
-        console.error('DB error:', err);
-    }
-}
-
-export const searchCourses = async (req: Request, res: Response) => {
-
-}

@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import db from '../db';
+import {getEvaluations} from "./evalController";
 
 export const getProfByCode = async (req: Request, res: Response) => {
     /**
      * Searches for a prof by name. Returns some aggregational statistics of them
      */
-    // This isn't being hit
     debugger;
     console.log('✅ Backend hit in prof! query =', req.query.q);
     const {q} = req.query;
@@ -15,7 +15,7 @@ export const getProfByCode = async (req: Request, res: Response) => {
     try{
         const result = await db.query(
             `
-            SELECT c.course_id,
+            SELECT p.prof_id, c.course_id,
                     CONCAT(p.first_name, ' ', p.last_name) AS "name",
                     c.code AS course,
                     AVG(e.ins3) AS INS3Avg,
@@ -27,7 +27,7 @@ export const getProfByCode = async (req: Request, res: Response) => {
             JOIN evaluations e ON o.offering_id = e.offering_id
             NATURAL JOIN professors p
             WHERE CONCAT(LOWER(p.first_name), ' ', LOWER(p.last_name)) LIKE LOWER($1)
-            GROUP BY c.course_id, c.code, p.first_name, p.last_name
+            GROUP BY p.prof_id, c.course_id, c.code, p.first_name, p.last_name
             ORDER BY COUNT(*) DESC;`,
             [`%${q}%`]
         );

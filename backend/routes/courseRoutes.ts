@@ -1,8 +1,6 @@
 import express from 'express';
 import {
     getCourseAggregateByCode,
-    getCourseEvalByCode,
-    searchCourses
 } from '../controllers/courseController';
 
 const router = express.Router();
