@@ -52,7 +52,12 @@ const HomeSearch = () => {
                 <span className="swap-on text-lg font-bold">Professor</span>
                 <span className="swap-off text-lg font-bold">Course</span>
             </label>
-
+            <div className="breadcrumbs text-lg py-6">
+                <ul>
+                    <li><a>{mode}</a></li>
+                    <li><a>{query}</a></li>
+                </ul>
+            </div>
             {results.length > 0 && (
                 <div className="grid grid-cols-5 gap-12">
                     {results.map((item, idx) => (
