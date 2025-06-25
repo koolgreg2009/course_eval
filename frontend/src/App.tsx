@@ -2,7 +2,7 @@ import HomeSearch from './components/HomeSearch';
 
 export default function App() {
     return (
-        <div className="min-h-screen bg-white">
+        <div data-theme = "dracula" className="min-h-screen">
             <HomeSearch />
         </div>
     );
