@@ -1,4 +1,4 @@
-import HomeSearch from './components/HomeSearch';
+import HomeSearch from './components/HomeSearch/HomeSearch';
 
 export default function App() {
     return (

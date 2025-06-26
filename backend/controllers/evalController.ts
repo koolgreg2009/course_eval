@@ -6,7 +6,8 @@ export const getEvaluations = async (req: Request, res: Response): Promise<void>
      *  Pre-Cond:
      *      Req needs to have two params: course_id and prof_id
      */
-    const { course_id, prof_id } = req.query;
+    const course_id = req.params.course_id;
+    const prof_id = req.params.prof_id;
     try {
         const sql =
             `
