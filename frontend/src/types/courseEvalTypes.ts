@@ -1,0 +1,36 @@
+export type ThumbnailItem = {
+    course_id: number;
+    prof_id: number;
+    course?: string;
+    prof_name?: string;
+    ins3avg?: number;
+    ins6avg?: number;
+    artsci3avg?: number;
+    times_taught?: number;
+};
+
+export type EvalData = {
+    prof_id: number;
+    course_id: number;
+    department: string;
+    code: string;
+    title: string;
+    offering_id: number;
+    section: string;
+    year: number;
+    semester: string;
+    eval_id: number;
+    ins1: number;
+    ins2: number;
+    ins3: number;
+    ins4: number;
+    ins5: number;
+    ins6: number;
+    artsci1: number;
+    artsci2: number;
+    artsci3: number;
+    num_invited: number;
+    num_responded: number;
+    first_name: string;
+    last_name: string;
+};

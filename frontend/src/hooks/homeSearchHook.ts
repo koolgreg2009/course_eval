@@ -1,13 +1,17 @@
 import {useState} from "react";
-
+import {ThumbnailItem, EvalData} from "../types/courseEvalTypes";
 
 export const useHomeSearch = (mode: 'course' | 'professor') => {
     const [query, setQuery] = useState('');
     // [str, functinon] setquery is a setter for the query string
     // same as above just different names with a type annotation
     const [results, setResults] = useState<any[]>([]);
-    const [evals, setEvals] = useState<any[]>([]);
+    // stores all evaluations
+    const [evals, setEvals] =  useState<{[course_id: number]: {[prof_id: number]: EvalData[]}}>({});
+    // stores the current element.
+    const [selectedItem, setSelectedItem] = useState<ThumbnailItem | null>(null);
     const endpoint = mode === 'course' ? '/api/courses' : '/api/professors';
+
 
 
     const handleSearch = async () => {
@@ -32,13 +36,31 @@ export const useHomeSearch = (mode: 'course' | 'professor') => {
     };
 
     const fetchCourseEvals = async (course_id: number, prof_id: number) => {
+        if (!evals[course_id]) {
+            /*
+            If evals[course_id] dne js wont create missing value, so must create manually.
+             */
+            evals[course_id] = {};
+        }
         if (!evals[course_id][prof_id]) {
             try {
                 /*
                 Rn query is being set in the tsx file. logic in tsx file: if mode is course then set pass courseid
                  */
-                const res = await fetch(`${endpoint}/eval`)
+                const res = await fetch(`/api/evals/${course_id}/${prof_id}`);
+                const data = await res.json();
+                setEvals(prev => ({
+                    ...prev,
+                    [course_id]: {
+                        ...(prev[course_id] || {}),
+                        [prof_id]: data.rows
+                    }
+                }));
+
+
+                console.log(evals[course_id][prof_id]);
             }catch(err) {
+                console.error('Get evals failed:', err);
 
             }
         }
@@ -48,6 +70,7 @@ export const useHomeSearch = (mode: 'course' | 'professor') => {
         query, setQuery,
         results, setResults,
         evals, setEvals,
+        selectedItem, setSelectedItem,
         endpoint,
         handleSearch,
         fetchCourseEvals
