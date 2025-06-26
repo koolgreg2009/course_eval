@@ -73,6 +73,6 @@ export const useHomeSearch = (mode: 'course' | 'professor') => {
         selectedItem, setSelectedItem,
         endpoint,
         handleSearch,
-        fetchCourseEvals
+        fetchCourseEvals,
     };
 }

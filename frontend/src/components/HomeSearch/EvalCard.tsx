@@ -1,5 +1,6 @@
 import React from "react";
 import {EvalData} from "../../types/courseEvalTypes";
+import {setNumberColors} from "../../hooks/miscHooks";
 
 interface EvalCardProps {
     item: EvalData;
@@ -14,19 +15,17 @@ const EvalCard = ({item}:EvalCardProps) => {
                 className="card w-full bg-base-200 shadow py-3 mb-6 p-6 rounded-xl overflow-hidden transition-all duration-400">
                 <div className="card-body">
                     <h2 className="card-title">{`${item.code}: ${item.year} ${item.semester} ${item.section}`}</h2>
-
                     <div className="grid grid-cols-14 gap-2 w-[78rem]">
                         {Object.entries(item).filter(([key]) => !excludedKeys.includes(key)).map(([key, value]) => (
                             <div key={key} className="stat">
                                 <div className="stat-title text-xs">{key.toUpperCase()}</div>
-                                <div className="stat-value text-base text-secondary">
-                                    {typeof value === 'number' ? (Number.isFinite(value) ? value.toFixed(2) : value) : String(value)}
+                                <div className={`stat-value text-base ${setNumberColors(Number(value))}`}>
+                                    {typeof value === 'number' ? (Number.isFinite(value) ? value.toFixed(1) : value) : String(value)}
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
-
             </div>
         </>
     )

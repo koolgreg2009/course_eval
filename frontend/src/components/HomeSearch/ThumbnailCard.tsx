@@ -1,5 +1,6 @@
 import React from "react";
 import {ThumbnailItem} from "../../types/courseEvalTypes";
+import {setNumberColors} from "../../hooks/miscHooks";
 
 interface thumbnailCardProps {
     item: ThumbnailItem
@@ -19,16 +20,16 @@ const ThumbnailCard = ({item, onClick}:thumbnailCardProps) => {
                         <div className="grid grid-cols-4 gap-2 w-full">
                             <div className="stat">
                                 <div className="stat-title text-xs">INS3</div>
-                                <div className="stat-value text-base text-secondary">{Number(item.ins3avg).toFixed(2)}</div>
+                                <div className={`stat-value text-base ${setNumberColors(Number(item.ins3avg))}`}>{Number(item.ins3avg).toFixed(2)}</div>
                             </div>
                             <div className="stat">
                                 <div className="stat-title text-xs">INS6</div>
-                                <div className="stat-value text-base text-secondary">{Number(item.ins6avg).toFixed(2)}</div>
+                                <div className={`stat-value text-base ${setNumberColors(Number(item.ins6avg))}`}>{Number(item.ins6avg).toFixed(2)}</div>
                             </div>
                             <div className="stat">
                                 <div className="stat-title text-xs">ARTSCI3</div>
                                 <div
-                                    className="stat-value text-base font-bold text-secondary">{Number(item.artsci3avg).toFixed(2)}</div>
+                                    className={`stat-value text-base ${setNumberColors(Number(item.artsci3avg))}`}>{Number(item.artsci3avg).toFixed(2)}</div>
                             </div>
                             <div className="stat">
                                 <div className="stat-title text-xs">Taught</div>
