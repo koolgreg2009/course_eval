@@ -36,6 +36,9 @@ export const useHomeSearch = (mode: 'course' | 'professor') => {
     };
 
     const fetchCourseEvals = async (course_id: number, prof_id: number) => {
+        /*
+            If eval doesnt exist in react's useState, fetch from db. Else do nothing
+         */
         if (!evals[course_id]) {
             /*
             If evals[course_id] dne js wont create missing value, so must create manually.
@@ -47,7 +50,7 @@ export const useHomeSearch = (mode: 'course' | 'professor') => {
                 /*
                 Rn query is being set in the tsx file. logic in tsx file: if mode is course then set pass courseid
                  */
-                const res = await fetch(`/api/evals/${course_id}/${prof_id}`);
+                const res = await fetch(`/api/evals?course_id=${course_id}&prof_id=${prof_id}`);
                 const data = await res.json();
                 setEvals(prev => ({
                     ...prev,
