@@ -2,19 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {useHomeSearch} from '../../hooks/homeSearchHook';
 import SearchInput from './SearchInput';
 import ThumbnailCard from './ThumbnailCard';
-import {ThumbnailItem, EvalData} from "../../types/courseEvalTypes";
+import {ThumbnailItem, EvalData, RootMode} from "../../types/courseEvalTypes";
 import EvalCard from "./EvalCard";
 const HomeSearch = () => {
-    const [mode, setMode] = useState<'course' | 'professor'>('course');
-    const {
-        query, setQuery,
-        results, setResults,
-        selectedItem, setSelectedItem,
-        evals, setEvals,
-        endpoint,
-        handleSearch,
-        fetchCourseEvals
-    } = useHomeSearch(mode);
+const [mode, setMode] = useState<RootMode>({category: 'course', view: 'evals'});
+const {
+    query, setQuery,
+    results, setResults,
+    selectedItem, setSelectedItem,
+    evals, setEvals,
+    endpoint,
+    handleSearch,
+    fetchCourseEvals
+} = useHomeSearch(mode);
 
     //const instateEvals = evals[selectedItem!.course_id]?.[selectedItem!.prof_id] ?? [];
 
@@ -36,10 +36,11 @@ const HomeSearch = () => {
         }
     };
     const getInstanceEval = (): EvalData[] => {
+        /**
+         * Takes no parameter, returns the evaluation object of instate elavulation. The instate eval is stored in
+         * selectedItem
+         */
         if (!selectedItem) return [];
-        // console.log(selectedItem);
-        // console.log(evals)
-        // console.log(evals[selectedItem.course_id]?.[selectedItem.prof_id]);
         return evals[selectedItem.course_id]?.[selectedItem.prof_id] ?? [];
 
     }
@@ -83,9 +84,10 @@ const HomeSearch = () => {
                 <div className="modal-box max-w-6xl py-6">
                     <div className="breadcrumbs font-bold text-lg py-6">
                     <ul>
-                        <li><a>{mode}</a></li>
+                        <li><a>{mode['category']}</a></li>
+                        <li><a>{mode['view']}</a></li>
                         <li><a>{query}</a></li>
-                        <li><a>{mode === 'course' ? selectedItem?.prof_name : selectedItem?.course}</a></li>
+                        <li><a>{mode['category'] === 'course' ? selectedItem?.prof_name : selectedItem?.course}</a></li>
                     </ul>
                         </div>
                             {

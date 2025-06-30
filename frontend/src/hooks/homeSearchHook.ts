@@ -1,7 +1,7 @@
 import {useState} from "react";
-import {ThumbnailItem, EvalData} from "../types/courseEvalTypes";
+import {ThumbnailItem, EvalData, RootMode} from "../types/courseEvalTypes";
 
-export const useHomeSearch = (mode: 'course' | 'professor') => {
+export const useHomeSearch = (mode: RootMode) => {
     const [query, setQuery] = useState('');
     // [str, functinon] setquery is a setter for the query string
     // same as above just different names with a type annotation
@@ -10,7 +10,7 @@ export const useHomeSearch = (mode: 'course' | 'professor') => {
     const [evals, setEvals] =  useState<{[course_id: number]: {[prof_id: number]: EvalData[]}}>({});
     // stores the current element.
     const [selectedItem, setSelectedItem] = useState<ThumbnailItem | null>(null);
-    const endpoint = mode === 'course' ? '/api/courses' : '/api/professors';
+    const endpoint = `/api/${mode.category}s/${mode.view}`;
 
 
 

@@ -34,3 +34,11 @@ export type EvalData = {
     first_name: string;
     last_name: string;
 };
+
+export type Category = 'course' | 'professor';
+export type View = 'evals' | 'aggregate';
+
+export interface RootMode {
+    category: Category;
+    view: View;
+}
