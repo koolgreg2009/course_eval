@@ -5,6 +5,7 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
     /**
      *  Pre-Cond:
      *      If order by is defined order must be either "ASC" or "DESC"
+     *  All params can be empty
      *  Now: Can pass variable inputs into request. Code now checks for existence, and passes them into sql query
      *  if they do exist.
      *  eg: await fetch(`/api/evals?course_id=${course_id}&prof_id=${prof_id}&year=${...}`);
@@ -25,6 +26,9 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
                 WHERE 1=1 
             `;
 
+    /*
+        To handle variable args we do string concat. append non empty args into array and then join them.
+     */
     if (course_id) {
         values.push(course_id);
         conditions.push(`c.course_id = $${values.length}`)
@@ -53,6 +57,9 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
 
 }
 export const getEvaluations = async (req: Request, res: Response) => {
+    /*
+    Separate function just to handle http req
+     */
     try{
         const result = await fetchEvaluations(req.query as any)
         res.json(result.rows)
