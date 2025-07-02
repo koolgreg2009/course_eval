@@ -62,7 +62,8 @@ export const getEvaluations = async (req: Request, res: Response) => {
      */
     try{
         const result = await fetchEvaluations(req.query as any)
-        res.json(result.rows)
+        console.log(result.rows);
+        res.json(result);
     } catch(err){
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
