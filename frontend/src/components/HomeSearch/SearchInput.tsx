@@ -7,13 +7,21 @@ interface SearchInputProps {
     mode: RootMode;
     setMode: (mode: RootMode) => void;
     handleKeyDown: (e:React.KeyboardEvent<HTMLInputElement>) => void;
+    handleSearch: () => Promise<void>;
 }
 const CATEGORY_OPTIONS: Category[] = ['course', 'professor'];
 const VIEW_OPTIONS: View[] = ['evals', 'aggregate'];
 
-const SearchInput = ({query, setQuery, mode, setMode, handleKeyDown}:SearchInputProps) => {
+const SearchInput = ({query, setQuery, mode, setMode, handleKeyDown, handleSearch}:SearchInputProps) => {
     return(
         <>
+            <div className="breadcrumbs text-lg py-2">
+                <ul>
+                    <li><a>{mode.category}</a></li>
+                    <li><a>{mode.view}</a></li>
+                    <li><a>{query}</a></li>
+                </ul>
+            </div>
             <input
                 type="text"
                 value={query}
@@ -34,7 +42,12 @@ const SearchInput = ({query, setQuery, mode, setMode, handleKeyDown}:SearchInput
                             name="category-options"
                             aria-label={option}
                             checked={mode.category === option}
-                            onChange={() => setMode({ ...mode,  category: option })}
+                            onChange={() =>
+                                {
+                                    setMode({ ...mode,  category: option });
+                                    setQuery('');
+                                }
+                            } // replaces category
                         />
                     ))}
                 </div>
@@ -51,19 +64,15 @@ const SearchInput = ({query, setQuery, mode, setMode, handleKeyDown}:SearchInput
                             name="view-options"
                             aria-label={option}
                             checked={mode.view === option}
-                            onChange={() => setMode({ ...mode, view: option})}
+                            onChange={() => {
+                                setMode({ ...mode, view: option});
+                            }} // replaces view
                         />
                     ))}
                 </div>
             </div>
 
-            <div className="breadcrumbs text-lg py-6">
-                <ul>
-                    <li><a>{mode.category}</a></li>
-                    <li><a>{mode.view}</a></li>
-                    <li><a>{query}</a></li>
-                </ul>
-            </div>
+
         </>
         )
 };

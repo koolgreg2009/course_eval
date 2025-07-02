@@ -6,6 +6,7 @@ import {ThumbnailItem, EvalData, RootMode} from "../../types/courseEvalTypes";
 import EvalCard from "./EvalCard";
 const HomeSearch = () => {
 const [mode, setMode] = useState<RootMode>({category: 'course', view: 'evals'});
+// Mode determines what user as chosen atm: category being course/prof and view being eval/aggregate
 const {
     query, setQuery,
     results, setResults,
@@ -27,10 +28,10 @@ const {
         /*
         This is called when users search
          */
-        if (e.key === 'Tab' && results.length === 1) {
-            setQuery(results[0].name || results[0].course_code);
-            setResults([]); // optionally hide results
-        }
+        // if (e.key === 'Tab' && results.length === 1) {
+        //     setQuery(results[0].name || results[0].course_code);
+        //     setResults([]); // optionally hide results
+        // }
         if (e.key === 'Enter' && query.length >= 3) {
             handleSearch();
         }
@@ -42,7 +43,6 @@ const {
          */
         if (!selectedItem) return [];
         return evals[selectedItem.course_id]?.[selectedItem.prof_id] ?? [];
-
     }
 
     return (
@@ -57,29 +57,48 @@ const {
                 mode={mode}
                 setMode={setMode}
                 handleKeyDown={handleKeyDown}
+                handleSearch={handleSearch}
                 />
 
             {/*displaying the search results*/}
-            {results.length > 0 && (
-                <div className="grid grid-cols-5 gap-12">
-                    {results.map((item, idx) => (
-                        <ThumbnailCard
-                            key={idx}
-                            item={item}
-                            onClick={() => {
-                                // stores currently selected item instate (1)
-                                setSelectedItem(item);
-                                fetchCourseEvals(item.course_id, item.prof_id);
-                                (document.getElementById('eval_modal') as HTMLDialogElement)?.showModal();
+
+            {results.length > 0 && ((mode.view === "evals") ? (
+                    <div>
+                        {
+                            results.map((item:any, idx:number) => (
+                            <EvalCard
+                                key={idx}
+                                item={item}>
+                            </EvalCard>
+                            ))
+                        }
+                    </div>
+                )
+                : (
+                    <div className="grid grid-cols-5 gap-12">
+                        {results.map((item, idx) => (
+                            <ThumbnailCard
+                                key={idx}
+                                item={item}
+                                onClick={() => {
+                                    // stores currently selected item object instate (1)
+                                    setSelectedItem(item);
+                                    // Retrieves corresponding evaluations
+                                    fetchCourseEvals(item.course_id, item.prof_id);
+                                    // Display modals
+                                    (document.getElementById('eval_modal') as HTMLDialogElement)?.showModal();
+                                    }
                                 }
-                            }
-                        >
-                        </ThumbnailCard>
-
-                    ))}
-                </div>
-            )}
-
+                            >
+                            </ThumbnailCard>
+                            )
+                        )
+                        }
+                    </div>
+                    )
+                )
+            }
+            {/* This is the pop up modal for each thumbnail*/}
             <dialog id="eval_modal" className="modal">
                 <div className="modal-box max-w-6xl py-6">
                     <div className="breadcrumbs font-bold text-lg py-6">
@@ -89,16 +108,16 @@ const {
                         <li><a>{query}</a></li>
                         <li><a>{mode['category'] === 'course' ? selectedItem?.prof_name : selectedItem?.course}</a></li>
                     </ul>
-                        </div>
-                            {
-                                getInstanceEval().map((item:any, idx:number) => (
-                                    <EvalCard
-                                        key={idx}
-                                        item={item}>
-                                    </EvalCard>
+                    </div>
+                        {
+                            getInstanceEval().map((item:any, idx:number) => (
+                                <EvalCard
+                                    key={idx}
+                                    item={item}>
+                                </EvalCard>
 
-                                ))
-                            }
+                            ))
+                        }
                     </div>
                 <form method="dialog" className="modal-backdrop">
                     <button>close</button>
