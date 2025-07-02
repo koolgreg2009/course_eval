@@ -1,7 +1,7 @@
 import db from '../db';
 import {Request, Response} from 'express';
 
-export const getEvaluations = async (req: Request, res: Response): Promise<void> => {
+export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any; year?: any; order_by?: any; asc?: any; })=> {
     /**
      *  Pre-Cond:
      *      If order by is defined order must be either "ASC" or "DESC"
@@ -9,10 +9,9 @@ export const getEvaluations = async (req: Request, res: Response): Promise<void>
      *  if they do exist.
      *  eg: await fetch(`/api/evals?course_id=${course_id}&prof_id=${prof_id}&year=${...}`);
      */
-    // const course_id = req.params.course_id;
-    // const prof_id = req.params.prof_id;
         // asc: if = asc then sort by ascending order.
-    const {course_id, prof_id, year, order_by, asc} = req.query;
+
+    const {course_id, prof_id, year, order_by, asc} = filters;
     const values = [];
     const conditions = [];
 
@@ -49,20 +48,16 @@ export const getEvaluations = async (req: Request, res: Response): Promise<void>
     } else{
         sql +=';';
     }
-    try {
-        const result = await db.query(sql, values);
-        res.json(result);
-    }catch(err){
-        if (err instanceof Error && 'code' in err) {
-            const pgErr = err as any; // or define a better type if you want
 
-            console.error('PostgreSQL error:', pgErr.message);
-            console.error('Code:', pgErr.code); // e.g., '23505' for unique_violation
+    return await db.query(sql, values);
 
-            res.status(500).json({ error: pgErr.message });
-        } else {
-            console.error('Unknown error:', err);
-            res.status(500).json({ error: 'Internal server error' });
-        }
+}
+export const getEvaluations = async (req: Request, res: Response) => {
+    try{
+        const result = await fetchEvaluations(req.query as any)
+        res.json(result.rows)
+    } catch(err){
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
