@@ -1,15 +1,10 @@
 import express from 'express';
 import {
     getCourseAggregateByCode,
+    getCourseEvalByCode
 } from '../controllers/courseController';
 
 const router = express.Router();
-
- // GET /api/courses
-// router.get('/', getCourseAggregateByCode);
-//
-// // GET /api/courses/:code
-// router.get('/:code', getCourseAggregateByCode);
 
 // GET /api/courses/search
 router.use((req, res, next) => {
@@ -21,6 +16,6 @@ router.use((req, res, next) => {
 });
 
 
-router.get('/code', getCourseAggregateByCode);
-
+router.get('/aggregate', getCourseAggregateByCode);
+router.get('/evals', getCourseEvalByCode);
 export default router;
