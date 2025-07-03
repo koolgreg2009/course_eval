@@ -1,7 +1,7 @@
 import psycopg2
 import pandas as pd
 import math
-
+import re
 # Helper function to convert Nan to NULL
 def safe_float(val):
     return None if pd.isna(val) or (isinstance(val, float) and math.isnan(val)) else float(val)
@@ -59,13 +59,18 @@ for _, row in df.iterrows():
             # Just removed the () lol
             course_parts.pop(-1)
         code_with_suffix = course_parts[-1]                     # e.g. 'AFR389H1-F-LEC5101'
-        title = "".join(course_parts[:-1])                     # e.g. 'Africa-China Economic Relation'
 
         code_split = code_with_suffix.split("-")
-        course_code = code_split[0]
+        # course_code = code_split[0]
+        match = re.search(r"[A-Za-z]{3}[0-9]{3}[HY][0-9]", course_raw)
+        course_code = match.group() if match else ''
         course_section = code_split[-1]
+        title = " ".join(course_parts[:-1])                     # e.g. 'Africa-China Economic Relation'
+        if course_code in title:
+            # for cases like: Software Design CSC207H1 - LEC0101
+            title = title.replace(course_code, '').replace('-', '').strip()
 
-        # Insert into courses table
+    # Insert into courses table
         cur.execute("""
                     SELECT course_id FROM courses WHERE code = %s
                     """, (course_code,))
