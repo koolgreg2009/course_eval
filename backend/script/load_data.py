@@ -89,8 +89,8 @@ for _, row in df.iterrows():
         cur.execute("""
                     SELECT offering_id 
                     FROM offerings
-                    WHERE prof_id = %s AND course_id = %s AND year = %s AND semester = %s
-                    """, (prof_id, course_id, year, term))
+                    WHERE prof_id = %s AND course_id = %s AND year = %s AND semester = %s AND section = %s
+                    """, (prof_id, course_id, year, term, course_section))
         offering = cur.fetchone()
         if offering:
             offering_id = offering[0]
