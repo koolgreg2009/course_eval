@@ -47,6 +47,10 @@ export const getCourseAggregateByCode = async (req: Request, res: Response): Pro
             `,
             [`%${course_name}%`]
         );
+        if(result.rows.length == 0){
+            res.status(400).json({error: 'Unknown course code'});
+            return;
+        }
         res.json(result.rows); // return as a json array
     }  catch (err) {
     if (err instanceof Error && 'code' in err) {
@@ -58,7 +62,6 @@ export const getCourseAggregateByCode = async (req: Request, res: Response): Pro
         res.status(500).json({ error: pgErr.message });
     }
     else {
-        console.error('Unknown error:', err);
         res.status(500).json({ error: 'Internal server error' });
         }
     }
