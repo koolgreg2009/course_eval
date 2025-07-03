@@ -43,7 +43,7 @@ export const getProfByCode = async (req: Request, res: Response) => {
         res.status(400).json({error: 'Ambiguous: Input maps to multiple results'});
         return;
     } else if(prof_id_result.length === 0){
-        res.status(400).json({error: 'Unknown entry'});
+        res.status(400).json({error: 'Unknown professor'});
         return;
     }
     else {
