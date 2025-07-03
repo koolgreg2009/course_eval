@@ -67,8 +67,8 @@ export const useHomeSearch = (mode: RootMode) => {
                     }
                 }));
 
-
-                console.log(evals[course_id][prof_id]);
+                console.log(data.rows);
+                console.log(`hi: `, course_id, prof_id, evals[course_id][prof_id]);
             }catch(err) {
                 console.error('Get evals failed:', err);
 

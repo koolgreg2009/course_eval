@@ -3,7 +3,7 @@ import {useHomeSearch} from '../../hooks/homeSearchHook';
 import SearchInput from './SearchInput';
 import ThumbnailCard from './ThumbnailCard';
 import {ThumbnailItem, EvalData, RootMode} from "../../types/courseEvalTypes";
-import EvalCard from "./EvalCard";
+import {EvalCard, EvalCardWithHeader} from "./EvalCard";
 const HomeSearch = () => {
 const [mode, setMode] = useState<RootMode>({category: 'course', view: 'evals'});
 // Mode determines what user as chosen atm: category being course/prof and view being eval/aggregate
@@ -66,10 +66,10 @@ const {
                     <div>
                         {
                             results.map((item:any, idx:number) => (
-                            <EvalCard
+                            <EvalCardWithHeader
                                 key={idx}
                                 item={item}>
-                            </EvalCard>
+                            </EvalCardWithHeader>
                             ))
                         }
                     </div>
