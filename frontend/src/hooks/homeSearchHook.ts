@@ -13,6 +13,7 @@ export const useHomeSearch = (mode: RootMode) => {
     // Prefix for the main query arg
     const prefix: string = (mode.category === 'course') ? 'course_name' : 'prof_name';
     const endpoint: string = `/api/${mode.category}s/${mode.view}`;
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         setResults([]);    // clear previous results immediately
@@ -20,16 +21,19 @@ export const useHomeSearch = (mode: RootMode) => {
     useEffect(() => { // fetches new data into result
         handleSearch();
     }, [mode.category, mode.view]);
+    useEffect(() => {
+        setError(null);
+    }, [query, mode]);
 
     const handleSearch = async () => {
         if (!query.trim()) return;
+        setError(null);
         try {
             console.log(`Fetching: ${endpoint}?${prefix}=${query}`) // ?q= gets put into req.query.q
             const res = await fetch(`${endpoint}?${prefix}=${query}`);
             if (!res.ok) {
-                const errorText = await res.text();
-                console.error(`HTTP ${res.status}:`, errorText);
-                return;
+                const errorBody = await res.json();
+                throw new Error(errorBody.error || "Something went wrong");
             }
 
             const data = await res.json(); // safe to parse
@@ -37,8 +41,7 @@ export const useHomeSearch = (mode: RootMode) => {
 
             setResults(data);
         } catch (err) {
-
-            console.error('Search failed:', err);
+            setError(err instanceof Error ? err.message : "Something went wrong");
         }
     };
 
@@ -80,6 +83,7 @@ export const useHomeSearch = (mode: RootMode) => {
         query, setQuery,
         results, setResults,
         evals, setEvals,
+        error, setError,
         selectedItem, setSelectedItem,
         endpoint,
         handleSearch,

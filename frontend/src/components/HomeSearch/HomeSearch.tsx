@@ -9,9 +9,10 @@ const [mode, setMode] = useState<RootMode>({category: 'course', view: 'evals'});
 // Mode determines what user as chosen atm: category being course/prof and view being eval/aggregate
 const {
     query, setQuery,
-    results, setResults,
+    results,
+    error,
     selectedItem, setSelectedItem,
-    evals, setEvals,
+    evals,
     endpoint,
     handleSearch,
     fetchCourseEvals
@@ -19,10 +20,10 @@ const {
 
     //const instateEvals = evals[selectedItem!.course_id]?.[selectedItem!.prof_id] ?? [];
 
-    useEffect(() => { // this fires everytime component refreshes
-        console.log('Current endpoint:', endpoint);
-    }, [endpoint]);
-
+    // useEffect(() => { // this fires everytime component refreshes
+    //     console.log('Current endpoint:', endpoint);
+    // }, [endpoint]);
+    //
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         /*
@@ -57,9 +58,8 @@ const {
                 mode={mode}
                 setMode={setMode}
                 handleKeyDown={handleKeyDown}
-                handleSearch={handleSearch}
+                error={error}
                 />
-
             {/*displaying the search results*/}
 
             {results.length > 0 && ((mode.view === "evals") ? (
