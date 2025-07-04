@@ -13,6 +13,7 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
         // asc: if = asc then sort by ascending order.
 
     const {course_id, prof_id, year, order_by, asc} = filters;
+    console.log(course_id, prof_id, year, order_by, asc);
     const values = [];
     const conditions = [];
 

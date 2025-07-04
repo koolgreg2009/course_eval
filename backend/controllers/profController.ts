@@ -18,7 +18,7 @@ async function getProfByName(prof_name: string){
 }
 
 export const getCourseEvalByProfName = async (req: Request, res: Response) => {
-    const {prof_name} = req.query;
+    const {prof_name, order_by, asc} = req.query;
     const prof_id_result = await getProfByName(String(prof_name));
     if (prof_id_result.length > 1){
         res.status(400).json({error: 'Ambiguous: Input maps to multiple results'});
@@ -27,7 +27,7 @@ export const getCourseEvalByProfName = async (req: Request, res: Response) => {
         res.status(400).json({error: 'Unknown entry'});
         return;
     }else{
-        const eval_result = await fetchEvaluations({prof_id: prof_id_result[0].prof_id});
+        const eval_result = await fetchEvaluations({prof_id: prof_id_result[0].prof_id, order_by: order_by, asc: asc});
         res.json(eval_result.rows);
     }
 }

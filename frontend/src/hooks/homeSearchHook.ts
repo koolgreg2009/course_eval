@@ -10,7 +10,7 @@ export const useHomeSearch = (mode: RootMode) => {
     const [evals, setEvals] =  useState<{[course_id: number]: {[prof_id: number]: EvalData[]}}>({});
     // stores the current element.
     const [selectedItem, setSelectedItem] = useState<ThumbnailItem | null>(null);
-    // Prefix for the main query arg
+    // Prefix for the main query arg.
     const prefix: string = (mode.category === 'course') ? 'course_name' : 'prof_name';
     const endpoint: string = `/api/${mode.category}s/${mode.view}`;
     const [error, setError] = useState<string | null>(null);
@@ -30,7 +30,7 @@ export const useHomeSearch = (mode: RootMode) => {
         setError(null);
         try {
             console.log(`Fetching: ${endpoint}?${prefix}=${query}`) // ?q= gets put into req.query.q
-            const res = await fetch(`${endpoint}?${prefix}=${query}`);
+            const res = await fetch(`${endpoint}?${prefix}=${query}&order_by=year&asc=`); // empty asc so desc order
             if (!res.ok) {
                 const errorBody = await res.json();
                 throw new Error(errorBody.error || "Something went wrong");

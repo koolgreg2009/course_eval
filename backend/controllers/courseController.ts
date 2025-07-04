@@ -17,7 +17,7 @@ export const getCourseEvalByCode = async (req: Request, res: Response) => {
         Gets course eval by a string of course name. Calls getCoursebycode to retrieve course id then uses it to
         fetch evaluations. This is to be called by when category = course, view = evals
      */
-    const {course_name} = req.query;
+    const {course_name, order_by, asc} = req.query;
     const course_id_result = await getCourseByCode(String(course_name));
     if (course_id_result.length > 1){
         res.status(400).json({error: 'Ambiguous: Input maps to multiple results'})
@@ -28,7 +28,7 @@ export const getCourseEvalByCode = async (req: Request, res: Response) => {
     }
     else{
         // call getEvaluations. It returns something like this:[ { course_id: 2490 } ]
-        const eval_results = await fetchEvaluations({course_id: course_id_result[0].course_id}); // error is caught inner function
+        const eval_results = await fetchEvaluations({course_id: course_id_result[0].course_id, order_by: order_by, asc: asc}); // error is caught inner function
         res.json(eval_results.rows);
     }
 }
