@@ -74,7 +74,7 @@ const {
                     </div>
                 )
                 : (
-                    <div className="grid grid-cols-5 gap-12">
+                    <div className="grid grid-cols-4 gap-12">
                         {results.map((item, idx) => (
                             <ThumbnailCard
                                 key={idx}
