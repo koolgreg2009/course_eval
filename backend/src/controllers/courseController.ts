@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import db from '../db';
-import {fetchEvaluations} from '../controllers/evalController';
+import {fetchEvaluations} from './evalController';
 
 async function getCourseByCode(course_name: string){
     const result = await db.query(`

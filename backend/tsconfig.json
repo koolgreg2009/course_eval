@@ -9,7 +9,8 @@
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,               // required for breakpoint debugging
     "baseUrl": ".",                  // optional, for easier import paths
-    "outDir": "dist"                 // optional if using tsc
+    "outDir": "./dist",                 // optional if using tsc
+    "rootDir": "./src"
   },
   "include": ["src/**/*.ts"],        // or whatever your source folder is
   "exclude": ["node_modules"]
