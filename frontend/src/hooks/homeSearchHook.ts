@@ -14,6 +14,7 @@ export const useHomeSearch = (mode: RootMode) => {
     const prefix: string = (mode.category === 'course') ? 'course_name' : 'prof_name';
     const endpoint: string = `/api/${mode.category}s/${mode.view}`;
     const [error, setError] = useState<string | null>(null);
+    const [showHint, setShowHint] = useState(true);
 
     useEffect(() => {
         setResults([]);    // clear previous results immediately
@@ -39,6 +40,7 @@ export const useHomeSearch = (mode: RootMode) => {
             const data = await res.json(); // safe to parse
             console.log(`data:`, data);
 
+            setShowHint(false);
             setResults(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Something went wrong");
@@ -86,6 +88,7 @@ export const useHomeSearch = (mode: RootMode) => {
         error, setError,
         selectedItem, setSelectedItem,
         endpoint,
+        showHint,
         handleSearch,
         fetchCourseEvals,
     };

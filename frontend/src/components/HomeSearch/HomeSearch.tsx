@@ -15,7 +15,8 @@ const {
     evals,
     endpoint,
     handleSearch,
-    fetchCourseEvals
+    fetchCourseEvals,
+    showHint,
 } = useHomeSearch(mode);
 
     //const instateEvals = evals[selectedItem!.course_id]?.[selectedItem!.prof_id] ?? [];
@@ -47,9 +48,7 @@ const {
     }
 
     return (
-        <div
-            className="min-h-screen flex flex-col items-center justify-start bg-base-100 text-base-content px-4 py-20"
-        >
+        <div className="min-h-screen flex flex-col items-center justify-start bg-base-100 text-base-content px-4 py-20">
             <h1 className="text-3xl font-bold mb-8">search</h1>
 
             <SearchInput
@@ -124,6 +123,20 @@ const {
                 </form>
             </dialog>
 
+            {showHint &&
+                (
+                    <footer style={{ marginTop: '2rem', textAlign: 'center' }}>
+                        <p> Please note:
+                            <ul className="list-disc list-inside">
+                                <li> Not all divisions share their course evaluation data. </li>
+                                <li> Instructors within divisions that share data may choose to opt out of making their course evaluation results available. </li>
+                                <li> Course evaluation data is not published if fewer than five responses are received, to prevent misinterpretation of data from a very small sample.</li>
+                                <li> I do not take responsibility of what you do with this data.</li>
+                            </ul>
+                        </p>
+                    </footer>
+                )
+            }
         </div>
 
     );
