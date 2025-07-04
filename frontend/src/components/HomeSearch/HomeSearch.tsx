@@ -123,21 +123,26 @@ const {
                 </form>
             </dialog>
 
-            {showHint &&
-                (
-                    <footer style={{ marginTop: '2rem', textAlign: 'center' }}>
-                        <p> Please note:
-                            <ul className="list-disc list-inside">
-                                <li> Not all divisions share their course evaluation data. </li>
-                                <li> Instructors within divisions that share data may choose to opt out of making their course evaluation results available. </li>
-                                <li> Course evaluation data is not published if fewer than five responses are received, to prevent misinterpretation of data from a very small sample.</li>
-                                <li> I do not take responsibility of what you do with this data.</li>
-                            </ul>
-                        </p>
-                    </footer>
-                )
-            }
+            <div className="fixed bottom-0 w-full p-8 text-center">
+                {showHint &&
+                    (
+                        <footer style={{ marginTop: '2rem', textAlign: 'center' }}>
+                            <p> Please note:
+                                <ul className="list-disc list-inside">
+                                    <li> Not all divisions share their course evaluation data. </li>
+                                    <li> Instructors within divisions that share data may choose to opt out of making their course evaluation results available. </li>
+                                    <li> Course evaluation data is not published if fewer than five responses are received, to prevent misinterpretation of data from a very small sample.</li>
+                                    <li> I do not take responsibility of what you do with this data.</li>
+                                </ul>
+                            </p>
+                        </footer>
+                    )
+                }
+            </div>
+
+
         </div>
+
 
     );
 
