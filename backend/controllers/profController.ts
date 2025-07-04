@@ -24,7 +24,7 @@ export const getCourseEvalByProfName = async (req: Request, res: Response) => {
         res.status(400).json({error: 'Ambiguous: Input maps to multiple results'});
         return;
     } else if(prof_id_result.length === 0){
-        res.status(400).json({error: 'Unknown entry'});
+        res.status(400).json({error: 'Unknown Professor'});
         return;
     }else{
         const eval_result = await fetchEvaluations({prof_id: prof_id_result[0].prof_id, order_by: order_by, asc: asc});

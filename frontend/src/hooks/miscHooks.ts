@@ -1,16 +1,31 @@
-export const setNumberColors = (val: number): string => {
-    if (val > 5){
+export const setNumberColors = (key: string, val: number): string => {
+    /*
+        Set color of value texts. If ARSCI2 then high is red, else reversed. If val is num invited then its neutral color
+     */
+    if (val > 5){ // num invited/responded
         return 'text-secondary';
     }
-    if (val >= 4){
+    if (key.toUpperCase() != "ARTSCI2") {
+        if (val >= 4) {
+            return 'text-success';
+        } else if (val < 3) {
+            return 'text-error';
+        }
+        return 'text-warning';
+    } else{
+        if (val >= 4) {
+            return 'text-error';
+        } else if (val < 3) {
+            return 'text-warning';
+        }
         return 'text-success';
-    } else if (val < 3){
-        return 'text-error';
     }
-    return 'text-warning';
 }
 
 export const ReviewCodeMappings: Record<ReviewCodeKey, string> = {
+    /*
+        Mapping for tooltip
+     */
     INS1: "I found the course intellectually stimulating.",
     INS2: "The course provided me with a deeper understanding of the subject matter.",
     INS3: "The instructor created a course atmosphere that was conducive to my learning.",
@@ -24,6 +39,9 @@ export const ReviewCodeMappings: Record<ReviewCodeKey, string> = {
     NUM_RESPONDED: "",
 };
 export type ReviewCodeKey =
+    /*
+        Type definition
+     */
     | "INS1"
     | "INS2"
     | "INS3"

@@ -25,7 +25,7 @@ const ThumbnailCard = ({item, onClick}:thumbnailCardProps) => {
                                         <span>INS3</span>
                                     </div>
                                 </ToolTipLabel>
-                                <div className={`stat-value text-base ${setNumberColors(Number(item.ins3avg))}`}>{Number(item.ins3avg).toFixed(2)}</div>
+                                <div className={`stat-value text-base ${setNumberColors("", Number(item.ins3avg))}`}>{Number(item.ins3avg).toFixed(2)}</div>
                             </div>
                             <div className="stat">
                                 <ToolTipLabel tooltip="Overall, the quality of my learning experience in this course was:">
@@ -33,7 +33,7 @@ const ThumbnailCard = ({item, onClick}:thumbnailCardProps) => {
                                         INS6
                                     </div>
                                 </ToolTipLabel>
-                                <div className={`stat-value text-base ${setNumberColors(Number(item.ins6avg))}`}>{Number(item.ins6avg).toFixed(2)}</div>
+                                <div className={`stat-value text-base ${setNumberColors("", Number(item.ins6avg))}`}>{Number(item.ins6avg).toFixed(2)}</div>
                             </div>
                             <div className="stat">
                                 <ToolTipLabel tooltip="I would recommend this course to other students.">
@@ -42,7 +42,7 @@ const ThumbnailCard = ({item, onClick}:thumbnailCardProps) => {
                                     </div>
                                 </ToolTipLabel>
                                 <div
-                                    className={`stat-value text-base ${setNumberColors(Number(item.artsci3avg))}`}>{Number(item.artsci3avg).toFixed(2)}</div>
+                                    className={`stat-value text-base ${setNumberColors("", Number(item.artsci3avg))}`}>{Number(item.artsci3avg).toFixed(2)}</div>
                             </div>
                             <div className="stat">
                                 <div className="stat-title text-xs">Taught</div>
