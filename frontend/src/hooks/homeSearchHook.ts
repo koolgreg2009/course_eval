@@ -12,7 +12,8 @@ export const useHomeSearch = (mode: RootMode) => {
     const [selectedItem, setSelectedItem] = useState<ThumbnailItem | null>(null);
     // Prefix for the main query arg.
     const prefix: string = (mode.category === 'course') ? 'course_name' : 'prof_name';
-    const endpoint: string = `/api/${mode.category}s/${mode.view}`;
+    // @ts-ignore
+    const endpoint: string = `${import.meta.env.VITE_API_URL}/api/${mode.category}s/${mode.view}`;
     const [error, setError] = useState<string | null>(null);
     const [showHint, setShowHint] = useState(true);
 
