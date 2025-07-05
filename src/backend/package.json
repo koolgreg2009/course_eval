@@ -15,7 +15,7 @@
     "pg": "^8.16.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": "28"
   },
   "scripts": {
     "dev": "node_modules/.bin/nodemon --watch src --exec ts-node src/index.ts",
