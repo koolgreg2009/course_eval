@@ -63,7 +63,8 @@ export const useHomeSearch = (mode: RootMode) => {
                 /*
                 Rn query is being set in the tsx file. logic in tsx file: if mode is course then set pass courseid
                  */
-                const res = await fetch(`/api/evals?course_id=${course_id}&prof_id=${prof_id}`);
+                // @ts-ignore
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/evals?course_id=${course_id}&prof_id=${prof_id}`);
                 const data = await res.json();
                 setEvals(prev => ({
                     ...prev,
