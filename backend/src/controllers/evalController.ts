@@ -35,6 +35,7 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
         conditions.push(`c.course_id = $${values.length}`)
     }
     if (prof_id) {
+        console.log(prof_id)
         values.push(prof_id);
         conditions.push(`prof_id = $${values.length}`)
     }
@@ -42,18 +43,18 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
         values.push(year);
         conditions.push(`year = $${values.length}`)
     }
-
+    console.log(`conditions length is ${conditions.length}`)
     if (conditions.length > 0){
         const added_sql:string = `AND ${conditions.join(' AND ')}`
         sql += `${added_sql}`;
     }
     // If want to sort year by ascending order
     if (order_by){
-        sql += `ORDER BY ${order_by} ${asc ? "ASC" : "DESC"};`
+        sql += ` ORDER BY ${order_by} ${asc ? "ASC" : "DESC"};`
     } else{
         sql +=';';
     }
-
+    console.log(sql);
     return await db.query(sql, values);
 
 }

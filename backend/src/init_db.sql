@@ -44,4 +44,4 @@ CREATE TABLE evaluations (
      num_responded INTEGER
 );
 
--- psql course_eval < backend/init_db.sql
+-- psql course_eval < backend/src/init_db.sql

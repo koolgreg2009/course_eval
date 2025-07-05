@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
@@ -10,7 +10,7 @@
     "sourceMap": true,               // required for breakpoint debugging
     "baseUrl": ".",                  // optional, for easier import paths
     "outDir": "./dist",                 // optional if using tsc
-    "rootDir": "./src"
+    "rootDir": "./src",
   },
   "include": ["src/**/*.ts"],        // or whatever your source folder is
   "exclude": ["node_modules"]

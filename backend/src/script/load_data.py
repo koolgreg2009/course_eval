@@ -2,6 +2,10 @@ import psycopg2
 import pandas as pd
 import math
 import re
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 # Helper function to convert Nan to NULL
 def safe_float(val):
     return None if pd.isna(val) or (isinstance(val, float) and math.isnan(val)) else float(val)
@@ -12,11 +16,15 @@ def safe_int(val):
 df = pd.read_csv("../data/course_evals_data.csv")
 
 conn = psycopg2.connect(
-    host="localhost",
-    dbname="course_eval",
-    user="kevinhu",
-    password=""
+    os.environ.get("DATABASE_URL"),
 )
+
+# conn = psycopg2.connect(
+#     host="localhost",
+#     dbname="course_eval",
+#     user="kevinhu",
+#     password=""
+# )
 cur = conn.cursor()
 count = 0
 cols = [
