@@ -1,0 +1,24 @@
+{
+  "name": "course_eval",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-all": "cd frontend && npm install && cd ../backend && npm install",
+    "build": "cd frontend && npm install && npm run build && cd ../backend && npm install && npm run build",
+    "start": "cd backend && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koolgreg2009/course_eval.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/koolgreg2009/course_eval/issues"
+  },
+  "homepage": "https://github.com/koolgreg2009/course_eval#readme"
+}
