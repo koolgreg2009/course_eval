@@ -33,7 +33,7 @@ export const getCourseEvalByCode = async (req: Request, res: Response) => {
     }
 }
 export const getCourseAggregateByCode = async (req: Request, res: Response): Promise<void> => {
-    console.log('✅ Backend hit! query =', req.query.course_name);
+    // console.log('✅ Backend hit! query =', req.query.course_name);
     debugger;
     const {course_name} = req.query;
     try{

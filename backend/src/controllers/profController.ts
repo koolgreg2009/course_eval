@@ -36,7 +36,7 @@ export const getProfByCode = async (req: Request, res: Response) => {
      * Searches for a prof by name. Returns some aggregational statistics of them
      */
     debugger;
-    console.log('✅ Backend hit in prof! query =', req.query.prof_name);
+    // console.log('✅ Backend hit in prof! query =', req.query.prof_name);
     const {prof_name} = req.query;
     const prof_id_result = await getProfByName(String(prof_name));
     if (prof_id_result.length > 1){

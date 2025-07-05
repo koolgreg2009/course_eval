@@ -31,7 +31,7 @@ export const useHomeSearch = (mode: RootMode) => {
         if (!query.trim()) return;
         setError(null);
         try {
-            console.log(`Fetching: ${endpoint}?${prefix}=${query}`) // ?q= gets put into req.query.q
+            // console.log(`Fetching: ${endpoint}?${prefix}=${query}`) // ?q= gets put into req.query.q
             const res = await fetch(`${endpoint}?${prefix}=${query}&order_by=year&asc=`); // empty asc so desc order
             if (!res.ok) {
                 const errorBody = await res.json();
@@ -39,7 +39,7 @@ export const useHomeSearch = (mode: RootMode) => {
             }
 
             const data = await res.json(); // safe to parse
-            console.log(`data:`, data);
+            // console.log(`data:`, data);
 
             setShowHint(false);
             setResults(data);
@@ -73,10 +73,10 @@ export const useHomeSearch = (mode: RootMode) => {
                     }
                 }));
 
-                console.log(data.rows);
-                console.log(`hi: `, course_id, prof_id, evals[course_id][prof_id]);
+                // console.log(data.rows);
+                // console.log(`hi: `, course_id, prof_id, evals[course_id][prof_id]);
             }catch(err) {
-                console.error('Get evals failed:', err);
+                // console.error('Get evals failed:', err);
 
             }
         }

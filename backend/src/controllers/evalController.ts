@@ -13,7 +13,7 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
         // asc: if = asc then sort by ascending order.
 
     const {course_id, prof_id, year, order_by, asc} = filters;
-    console.log(course_id, prof_id, year, order_by, asc);
+    // console.log(course_id, prof_id, year, order_by, asc);
     const values = [];
     const conditions = [];
 
@@ -35,7 +35,7 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
         conditions.push(`c.course_id = $${values.length}`)
     }
     if (prof_id) {
-        console.log(prof_id)
+        // console.log(prof_id)
         values.push(prof_id);
         conditions.push(`prof_id = $${values.length}`)
     }
@@ -43,7 +43,7 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
         values.push(year);
         conditions.push(`year = $${values.length}`)
     }
-    console.log(`conditions length is ${conditions.length}`)
+    // console.log(`conditions length is ${conditions.length}`)
     if (conditions.length > 0){
         const added_sql:string = `AND ${conditions.join(' AND ')}`
         sql += `${added_sql}`;
@@ -54,7 +54,7 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
     } else{
         sql +=';';
     }
-    console.log(sql);
+    // console.log(sql);
     return await db.query(sql, values);
 
 }
@@ -64,10 +64,10 @@ export const getEvaluations = async (req: Request, res: Response) => {
      */
     try{
         const result = await fetchEvaluations(req.query as any)
-        console.log(result.rows);
+        // console.log(result.rows);
         res.json(result);
     } catch(err){
-        console.error(err);
+        // console.error(err);
         res.status(500).json({ error: 'Internal server error' });
     }
 }
