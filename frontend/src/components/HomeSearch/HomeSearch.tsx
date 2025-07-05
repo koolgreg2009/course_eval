@@ -133,7 +133,7 @@ const {
                                     <li> Instructors within divisions that share data may choose to opt out of making their course evaluation results available. </li>
                                     <li> Course evaluation data is not published if fewer than five responses are received, to prevent misinterpretation of data from a very small sample.</li>
                                     <li> Course evaluations are completed before the final exam. </li>
-                                    <li> I do not take responsibility of what you do with this data.</li>
+                                    <li> Data is collected from U of T Course Evaluations. I do not take responsibility of what you do with this data.</li>
                                 </ul>
                             </p>
                         </footer>
