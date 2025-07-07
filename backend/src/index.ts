@@ -5,6 +5,7 @@ import courseRoutes from './routes/courseRoutes';
 import professorRoutes from './routes/profRoutes';
 import evalRoutes from "./routes/evalRoutes";
 import path from 'path';
+import logRoutes from "./routes/logRoutes";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ debugger;
 app.use('/api/courses', courseRoutes);
 app.use('/api/professors', professorRoutes);
 app.use('/api/evals', evalRoutes);
+app.use('/api/log', logRoutes)
 // Fallback (optional)
 app.get('/', (_req, res) => {
     res.send('Welcome to the Course Evaluation API');
@@ -35,7 +37,7 @@ app.get('/{*any}', (_req, res) => {
 });
 
 app.listen(PORT, () => {
-    //console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
 
 

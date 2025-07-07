@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {ThumbnailItem, EvalData, RootMode} from "../types/courseEvalTypes";
+import {ThumbnailItem, EvalData, RootMode, Category, View} from "../types/courseEvalTypes";
 
 export const useHomeSearch = (mode: RootMode) => {
     const [query, setQuery] = useState('');
@@ -13,7 +13,8 @@ export const useHomeSearch = (mode: RootMode) => {
     // Prefix for the main query arg.
     const prefix: string = (mode.category === 'course') ? 'course_name' : 'prof_name';
     // @ts-ignore
-    const endpoint: string = `${import.meta.env.VITE_API_URL}/api/${mode.category}s/${mode.view}`;
+    const base_url = import.meta.env.VITE_API_URL;
+    const endpoint: string = `${base_url}/api/${mode.category}s/${mode.view}`;
     const [error, setError] = useState<string | null>(null);
     const [showHint, setShowHint] = useState(true);
 
@@ -21,18 +22,26 @@ export const useHomeSearch = (mode: RootMode) => {
         setResults([]);    // clear previous results immediately
     }, [mode]);
     useEffect(() => { // fetches new data into result
-        handleSearch();
+        handleSearch(mode.category, mode.view, query);
     }, [mode.category, mode.view]);
     useEffect(() => {
         setError(null);
     }, [query, mode]);
 
-    const handleSearch = async () => {
+    const handleSearch = async (search_category: Category, search_view: View, search_term: String) => {
+        console.log("search hit in frontend");
         if (!query.trim()) return;
         setError(null);
         try {
             // console.log(`Fetching: ${endpoint}?${prefix}=${query}`) // ?q= gets put into req.query.q
+    //        console.log(`${endpoint}?${prefix}=${query}&order_by=year&asc=`);
             const res = await fetch(`${endpoint}?${prefix}=${query}&order_by=year&asc=`); // empty asc so desc order
+ //           console.log(`${base_url}/api/log/search`);
+            await fetch(`${base_url}/api/log/search`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({search_category, search_view, search_term })
+            })
             if (!res.ok) {
                 const errorBody = await res.json();
                 throw new Error(errorBody.error || "Something went wrong");

@@ -35,7 +35,7 @@ const {
         //     setResults([]); // optionally hide results
         // }
         if (e.key === 'Enter' && query.length >= 3) {
-            handleSearch();
+            handleSearch(mode.category, mode.view, query);
         }
     };
     const getInstanceEval = (): EvalData[] => {
@@ -127,7 +127,7 @@ const {
                 {showHint &&
                     (
                         <footer style={{ marginTop: '2rem', textAlign: 'center' }}>
-                            <p> Please note:
+                            <b> Please note:</b>
                                 <ul className="list-disc list-inside">
                                     <li> Not all divisions share their course evaluation data. </li>
                                     <li> Instructors within divisions that share data may choose to opt out of making their course evaluation results available. </li>
@@ -135,7 +135,6 @@ const {
                                     <li> Course evaluations are completed before the final exam. </li>
                                     <li> Data is collected from U of T Course Evaluations. I do not take responsibility of what you do with this data.</li>
                                 </ul>
-                            </p>
                         </footer>
                     )
                 }
