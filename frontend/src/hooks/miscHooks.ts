@@ -16,9 +16,9 @@ export const setNumberColors = (key: string, val: number): string => {
         if (val >= 4) {
             return 'text-error';
         } else if (val < 3) {
-            return 'text-warning';
+            return 'text-success';
         }
-        return 'text-success';
+        return 'text-warning';
     }
 }
 
