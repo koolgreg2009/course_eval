@@ -3,10 +3,11 @@ import {Request, Response} from "express";
 import {Category, View} from "../utils/typeDef"
 
 export const logSearch = async (search_category: Category, search_view: View, search_term: string) => {
+
     await db.query(
         `
-    INSERT INTO search_log(search_category, search_view, search_term, timestamp) 
-    VALUES ($1, $2, $3, NOW())
+    INSERT INTO search_log(search_category, search_view, search_term) 
+    VALUES ($1, $2, $3)
     `, [search_category, search_view, search_term]);
 
 }
