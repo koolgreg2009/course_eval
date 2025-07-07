@@ -26,8 +26,7 @@ export const ToolTipLabel = ({children, tooltip}: ToolTipProps) => (
                       z-50
                       min-w-[16rem]
                       left-1/2
-                      -translate-x-1/2
-                    ">
+                      -translate-x-1/5">
             {tooltip}
         </span>
     </span>
