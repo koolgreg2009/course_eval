@@ -19,7 +19,7 @@ const excludedKeys = ['prof_id', 'course_id', 'offering_id', 'eval_id', 'first_n
 export const EvalCard = ({item, children, tooltip}:EvalCardProps) =>{
     return(
         <div
-            className="card w-full bg-base-200 shadow py-3 mb-6 p-6 rounded-xzl overflow transition-all duration-400">
+            className="card max-w-3xl mx-auto bg-base-200 shadow py-3 mb-6 p-6 rounded-xzl overflow transition-all duration-400">
             {children && (
                 <div className="card-header">
                     {children}
@@ -27,7 +27,7 @@ export const EvalCard = ({item, children, tooltip}:EvalCardProps) =>{
             )}
             <div className="card-body">
                 <h2 className="card-title">{`${item.code}: ${item.year} ${item.semester} ${item.section}`}</h2>
-                <div className="grid grid-cols-14 gap-2 w-[78rem]">
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-4">
                     {Object.entries(item).filter(([key]) => !excludedKeys.includes(key)).map(([key, value]) => (
                         <div key={key} className="stat">
                             {key.toUpperCase() in ReviewCodeMappings && (

@@ -15,16 +15,16 @@ def safe_int(val):
 
 df = pd.read_csv("../data/course_evals_data.csv")
 
-conn = psycopg2.connect(
-    os.environ.get("DATABASE_URL"),
-)
-
 # conn = psycopg2.connect(
-#     host="localhost",
-#     dbname="course_eval",
-#     user="kevinhu",
-#     password=""
+#     os.environ.get("DATABASE_URL"),
 # )
+
+conn = psycopg2.connect(
+    host="localhost",
+    dbname="course_eval",
+    user="kevinhu",
+    password=""
+)
 cur = conn.cursor()
 count = 0
 cols = [
@@ -113,7 +113,7 @@ for _, row in df.iterrows():
         cur.execute("""
                     INSERT INTO evaluations (
                         offering_id, ins1, ins2, ins3, ins4, ins5, ins6,
-                        artsci1, artsci2, artsci3, num_invited, num_responded
+                        artsci1, artsci2, artsci3, invited, responded
                     )
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """, (

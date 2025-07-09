@@ -40,8 +40,16 @@ CREATE TABLE evaluations (
      artsci1 REAL,
      artsci2 REAL,
      artsci3 REAL,
-     num_invited INTEGER,
-     num_responded INTEGER
+     invited INTEGER,
+     responded INTEGER
+);
+
+CREATE TABLE search_log (
+    log_id SERIAL PRIMARY KEY,
+    search_category VARCHAR(20) NOT NULL, -- 'course' or 'professor'
+    search_view VARCHAR(10) NOT NULL, -- 'eval' or 'aggregate'
+    search_term TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT NOW()
 );
 
 -- psql course_eval < backend/src/init_db.sql

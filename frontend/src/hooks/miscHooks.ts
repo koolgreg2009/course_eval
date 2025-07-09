@@ -35,8 +35,8 @@ export const ReviewCodeMappings: Record<ReviewCodeKey, string> = {
     ARTSCI1: "The instructor generated enthusiasm for learning in the course.",
     ARTSCI2: "Compared to other courses, the workload for this course was…",
     ARTSCI3: "I would recommend this course to other students.",
-    NUM_INVITED: "",
-    NUM_RESPONDED: "",
+    INVITED: "",
+    RESPONDED: "",
 };
 export type ReviewCodeKey =
     /*
@@ -51,5 +51,5 @@ export type ReviewCodeKey =
     | "ARTSCI1"
     | "ARTSCI2"
     | "ARTSCI3"
-    | "NUM_INVITED"
-    | "NUM_RESPONDED";
+    | "INVITED"
+    | "RESPONDED";
