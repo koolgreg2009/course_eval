@@ -74,7 +74,7 @@ const {
                     </div>
                 )
                 : (
-                    <div className="grid grid-cols-4 gap-12">
+                        <div className="grid grid-cols-4 gap-12 overflow-x-auto min-w-[64rem]">
                         {results.map((item, idx) => (
                             <ThumbnailCard
                                 key={idx}
@@ -123,7 +123,7 @@ const {
                 </form>
             </dialog>
 
-            <div className="fixed bottom-0 w-full p-8 text-center">
+            <div className="bottom-0 w-full p-8 text-center">
                 {showHint &&
                     (
                         <footer style={{ marginTop: '2rem', textAlign: 'center' }}>
