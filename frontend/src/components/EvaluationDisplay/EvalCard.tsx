@@ -1,7 +1,7 @@
 import React from "react";
 import {EvalData} from "../../types/courseEvalTypes";
 import {setNumberColors} from "../../hooks/miscHooks";
-import ToolTipLabel from "./ToolTipLabel";
+import ToolTipLabel from "../HomeSearch/ToolTipLabel";
 import {ReviewCodeMappings, ReviewCodeKey} from "../../hooks/miscHooks";
 
 interface EvalCardProps {
