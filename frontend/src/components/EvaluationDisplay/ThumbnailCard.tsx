@@ -1,7 +1,7 @@
 import React from "react";
 import {ThumbnailItem} from "../../types/courseEvalTypes";
 import {setNumberColors} from "../../hooks/miscHooks";
-import ToolTipLabel from "./ToolTipLabel";
+import ToolTipLabel from "../HomeSearch/ToolTipLabel";
 
 interface thumbnailCardProps {
     item: ThumbnailItem
@@ -11,7 +11,7 @@ interface thumbnailCardProps {
 const ThumbnailCard = ({item, onClick}:thumbnailCardProps) => {
     return(
         <>
-            <div className="w-fit rounded overflow relative bg-base-200 hover:bg-base-300
+            <div className="w-fit rounded overflow relative bg-base-800 hover:bg-base-900
              transition hover:-translate-y-1 cursor-pointer shadow"
                  onClick={onClick} >
 
