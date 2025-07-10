@@ -29,8 +29,8 @@ export type EvalData = {
     artsci1: number;
     artsci2: number;
     artsci3: number;
-    num_invited: number;
-    num_responded: number;
+    invited: number;
+    responded: number;
     first_name: string;
     last_name: string;
 };
@@ -41,4 +41,9 @@ export type View = 'evals' | 'aggregate';
 export interface RootMode {
     category: Category;
     view: View;
+}
+
+export interface ToolTipLabelProps {
+    label: string;
+    tooltip: string;
 }
