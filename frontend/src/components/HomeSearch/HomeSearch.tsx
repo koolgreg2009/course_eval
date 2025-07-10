@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useHomeSearch} from '../../hooks/homeSearchHook';
 import SearchInput from './SearchInput';
-import ThumbnailCard from './ThumbnailCard';
+import ThumbnailCard from '../EvaluationDisplay/ThumbnailCard';
 import {ThumbnailItem, EvalData, RootMode} from "../../types/courseEvalTypes";
-import {EvalCard, EvalCardWithHeader} from "./EvalCard";
+import {EvalCard, EvalCardWithHeader} from "../EvaluationDisplay/EvalCard";
+import {EvalTable} from "../EvaluationDisplay/EvalTable";
 const HomeSearch = () => {
 const [mode, setMode] = useState<RootMode>({category: 'course', view: 'evals'});
 // Mode determines what user as chosen atm: category being course/prof and view being eval/aggregate
@@ -68,12 +69,10 @@ const {
                 {results.length > 0 && (
                     mode.view === "evals" ? (
                         <div className="mt-12">
-                            {results.map((item: any, idx: number) => (
-                                <EvalCardWithHeader
-                                    key={idx}
-                                    item={item}
+                                <EvalTable
+                                    data={results}
+                                    category={mode["category"]}
                                 />
-                            ))}
                         </div>
                     ) : (
                         <div className="w-full overflow-x-auto bg-base-100 mt-12">
