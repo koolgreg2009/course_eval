@@ -37,7 +37,6 @@ export const EvalCard = ({item, children, tooltip}:EvalCardProps) =>{
                                     </div>
                                 </ToolTipLabel>
                             )}
-                            {/*<div className="stat-title text-xs">{key.toUpperCase()}</div>*/}
                             <div className={`stat-value text-base ${setNumberColors(key, Number(value))}`}>
                                 {typeof value === 'number' ? (Number.isFinite(value) ? value.toFixed(1) : value) : String(value)}
                             </div>

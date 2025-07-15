@@ -5,7 +5,7 @@ export type ThumbnailItem = {
     prof_name?: string;
     ins3avg?: number;
     ins6avg?: number;
-    artsci3avg?: number;
+    artsci1avg?: number;
     times_taught?: number;
 };
 

@@ -1,6 +1,7 @@
 import db from '../db';
 import {Request, Response} from 'express';
-
+import {getProfByName} from './profController'
+import {getCourseByCode} from './courseController'
 export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any; year?: any; order_by?: any; asc?: any; })=> {
     /**
      *  Pre-Cond:
@@ -13,7 +14,7 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
         // asc: if = asc then sort by ascending order.
 
     const {course_id, prof_id, year, order_by, asc} = filters;
-    // console.log(course_id, prof_id, year, order_by, asc);
+    console.log(course_id, prof_id, year, order_by, asc);
     const values = [];
     const conditions = [];
 
@@ -68,6 +69,52 @@ export const getEvaluations = async (req: Request, res: Response) => {
         res.json(result);
     } catch(err){
         // console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Failed when calling getEvaluations' });
     }
 }
+
+export const getCourseAggregate = async (req: Request, res: Response) => {
+    /*
+    This function does a groupby of all evaluations and then returns the averaged ins and artsci values.
+     */
+    console.log("getCourseAggregate HIT");
+    const {target, category} = req.query;
+    let groupby: string = "";
+    let value: string = "";
+    const allowedGroupBys = ['course_id', 'prof_id']; // to prevent sql injection. if somenoe calls API/this route with 1=1 and "1=1; DROP TABLE evaluations; --"
+
+    // problem is that rn we are passing in the name but we need the id so we actually need to call the respective getter functions
+    if (category == "course") {
+        groupby = "course_id";
+        const result = await getCourseByCode(String(target));
+        value = result.course_id;
+    } else if (category == "professor") {
+        groupby = "prof_id";
+        const result = await getProfByName(String(target));
+        value = result.prof_id;
+    }
+
+    if (!allowedGroupBys.includes(groupby)) {
+        throw new Error('Invalid groupby');
+    }
+
+    const sql =
+        `
+        SELECT avg(ins1) AS ins1avg, avg(ins2) AS ins2avg, avg(ins3) AS ins3avg, avg(ins4) AS ins4avg, avg(ins5) AS ins5avg, 
+               avg(ins6) AS ins6avg, avg(artsci1) AS artsci1avg, avg(artsci2) AS artsci2avg, avg(artsci3) AS artsci3avg
+        FROM evaluations e join offerings o ON e.offering_id = o.offering_id
+        WHERE o.${groupby} = $1
+        GROUP BY o.${groupby};
+        `;
+    console.log(sql);
+
+    try{
+        const result = await db.query(sql, [value]);
+        // console.log(result.rows);
+        res.json(result);
+    } catch(err){
+        // console.error(err);
+        res.status(500).json({ error: 'Failed when calling getCourseAggregate' });
+    }
+}
+
