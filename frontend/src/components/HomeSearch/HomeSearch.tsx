@@ -67,7 +67,7 @@ const {
                         error={error}
                     />
                 </div>
-                {results.length > 0 && (
+                {barResults.length > 0 && (
                     <BarChart
                         category={mode["category"]}
                         values={barResults}

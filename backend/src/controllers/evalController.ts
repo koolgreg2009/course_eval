@@ -84,6 +84,7 @@ export const getCourseAggregate = async (req: Request, res: Response) => {
     const allowedGroupBys = ['course_id', 'prof_id']; // to prevent sql injection. if somenoe calls API/this route with 1=1 and "1=1; DROP TABLE evaluations; --"
 
     // problem is that rn we are passing in the name but we need the id so we actually need to call the respective getter functions
+
     if (category == "course") {
         groupby = "course_id";
         const result = await getCourseByCode(String(target));
@@ -115,6 +116,7 @@ export const getCourseAggregate = async (req: Request, res: Response) => {
     } catch(err){
         // console.error(err);
         res.status(500).json({ error: 'Failed when calling getCourseAggregate' });
+        return;
     }
 }
 

@@ -32,13 +32,18 @@ export const useHomeSearch = (mode: RootMode) => {
         setGraphTruncate(!graphTruncate)};
     useEffect(() => {
         setResults([]);    // clear previous results immediately
+        handleSearch(mode.category, mode.view, query); // this needs to watch both category and view or else it flashes
+        // Set instate setGraphTruncate to false since button always starts at false
+        setGraphTruncate(false);
     }, [mode]);
-    useEffect(() => { // fetches new data into result
-        handleSearch(mode.category, mode.view, query);
-    }, [mode.category, mode.view]);
     useEffect(() => {
+        // Clear Error
         setError(null);
     }, [query, mode]);
+    useEffect(() => {
+        // when switching between course and professor clear barResults, but want to maintain it between evals and aggregate
+        setBarResults([]);
+    }, [mode.category])
 
     const handleSearch = async (search_category: Category, search_view: View, search_term: String) => {
         console.log("search hit in frontend");
@@ -56,12 +61,17 @@ export const useHomeSearch = (mode: RootMode) => {
                 body: JSON.stringify({search_category, search_view, search_term })
             })
             const data = await res.json(); // safe to parse
+            if (!res.ok) {
+                console.log(data);
+                setError(data.error);
+                return;
+            }
             console.log(`data:`, data);
             await fetchBarResults();
             setShowHint(false);
             setResults(data);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Something went wrong");
+            setError(err instanceof Error ? `Failed calling handleSearch ${err.message}` : "Something went wrong");
         }
     };
 
@@ -95,6 +105,7 @@ export const useHomeSearch = (mode: RootMode) => {
                 // console.log(`hi: `, course_id, prof_id, evals[course_id][prof_id]);
             }catch(err) {
                 // console.error('Get evals failed:', err);
+                setError(err instanceof Error ? `Failed calling fetchCourseEvals ${err.message}` : "Something went wrong");
 
             }
         }
@@ -113,7 +124,8 @@ export const useHomeSearch = (mode: RootMode) => {
             console.log(Object.values(data.rows[0]));
         }
         catch(err) {
-            console.error(err);
+            setError(err instanceof Error ? `Failed calling fetchBarResults ${err.message}` : "Something went wrong");
+
 
         }
     }

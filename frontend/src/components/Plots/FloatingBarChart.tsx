@@ -74,6 +74,9 @@ export const BarChart = ({category, values, target, toggleGraphTruncate, graphTr
                 display: true,
                 text: `${target}'s aggregated statistics`,
             },
+            tooltip: {
+
+            }
         },
         scales: {
             y: {
