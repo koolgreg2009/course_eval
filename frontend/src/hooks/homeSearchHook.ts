@@ -55,11 +55,6 @@ export const useHomeSearch = (mode: RootMode) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({search_category, search_view, search_term })
             })
-            if (!res.ok) {
-                const errorBody = await res.json();
-                throw new Error(errorBody.error || "Something went wrong");
-            }
-
             const data = await res.json(); // safe to parse
             console.log(`data:`, data);
             await fetchBarResults();
