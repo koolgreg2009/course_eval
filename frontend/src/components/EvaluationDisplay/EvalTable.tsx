@@ -21,7 +21,7 @@ export const EvalTable = ({data, category, children, tooltip, item}: EvalRowProp
                     <div className="inline-block min-w-full py-2 align-middle text-center md:px-6 lg:px-8">
                         <div className="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
                             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead className="bg-gray-50 dark:bg-gray-800">
+                                <thead className="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
                                 <tr>
                                     <th className="py-3.5 px-4 text-sm font-normal text-center text-gray-500 dark:text-gray-400">
                                         {category == "course" ? "Professor" : "Course"}
