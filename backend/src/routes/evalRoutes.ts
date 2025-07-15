@@ -1,9 +1,10 @@
 import express from "express";
-import {getEvaluations} from "../controllers/evalController";
+import {getCourseAggregate, getEvaluations} from "../controllers/evalController";
 
 const router = express.Router();
 
 
-router.get("/", getEvaluations);
+router.get("/search", getEvaluations);
+router.get("/bar", getCourseAggregate);
 
 export default router;

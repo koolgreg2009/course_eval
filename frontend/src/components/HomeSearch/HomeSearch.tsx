@@ -5,12 +5,14 @@ import ThumbnailCard from '../EvaluationDisplay/ThumbnailCard';
 import {ThumbnailItem, EvalData, RootMode} from "../../types/courseEvalTypes";
 import {EvalCard, EvalCardWithHeader} from "../EvaluationDisplay/EvalCard";
 import {EvalTable} from "../EvaluationDisplay/EvalTable";
+import {BarChart} from "../Plots/FloatingBarChart";
 const HomeSearch = () => {
 const [mode, setMode] = useState<RootMode>({category: 'course', view: 'evals'});
 // Mode determines what user as chosen atm: category being course/prof and view being eval/aggregate
 const {
     query, setQuery,
-    results,
+    results, // main display results
+    barResults,
     error,
     selectedItem, setSelectedItem,
     evals,
@@ -18,6 +20,7 @@ const {
     handleSearch,
     fetchCourseEvals,
     showHint,
+    graphTruncate, toggleGraphTruncate
 } = useHomeSearch(mode);
 
     //const instateEvals = evals[selectedItem!.course_id]?.[selectedItem!.prof_id] ?? [];
@@ -64,7 +67,17 @@ const {
                         error={error}
                     />
                 </div>
+                {results.length > 0 && (
+                    <BarChart
+                        category={mode["category"]}
+                        values={barResults}
+                        target={query}
+                        toggleGraphTruncate={toggleGraphTruncate}
+                        graphTruncate={graphTruncate}
+                    />
 
+                    )
+                }
                 {/* Results rendering */}
                 {results.length > 0 && (
                     mode.view === "evals" ? (
@@ -83,6 +96,7 @@ const {
                                         <ThumbnailCard
                                             key={idx}
                                             item={item}
+                                            mode={mode.category}
                                             onClick={() => {
                                                 setSelectedItem(item);
                                                 fetchCourseEvals(item.course_id, item.prof_id);

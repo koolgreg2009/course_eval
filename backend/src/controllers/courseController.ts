@@ -2,15 +2,24 @@ import { Request, Response } from 'express';
 import db from '../db';
 import {fetchEvaluations} from './evalController';
 
-async function getCourseByCode(course_name: string){
+export async function getCourseByCode(course_name: string){
+    /*
+        Called by getCourseEvalByCode. Gets a course_id based on name. If gets more than none or more than 1 result
+        raise error. Returns course_id if success.
+     */
     const result = await db.query(`
                 SELECT c.course_id
                 FROM courses c
                 WHERE LOWER(c.code) LIKE LOWER($1);
         `,
         [`%${course_name}%`]);
-    return result.rows;
-
+    if (result.rows.length > 1){
+        throw new Error('Ambiguous: Input maps to multiple results')
+    } else if (result.rows.length == 0){
+        throw new Error('Unknown course code')
+    }
+    // so result is size 1
+    return result.rows[0];
 }
 export const getCourseEvalByCode = async (req: Request, res: Response) => {
     /*
@@ -18,29 +27,28 @@ export const getCourseEvalByCode = async (req: Request, res: Response) => {
         fetch evaluations. This is to be called by when category = course, view = evals
      */
     const {course_name, order_by, asc} = req.query;
-    const course_id_result = await getCourseByCode(String(course_name));
-    if (course_id_result.length > 1){
-        res.status(400).json({error: 'Ambiguous: Input maps to multiple results'})
-        return;
-    } else if(course_id_result.length === 0){
-        res.status(400).json({error: 'Unknown course code'});
-        return;
-    }
-    else{
+    try{
+        const course_id_result = await getCourseByCode(String(course_name));
         // call getEvaluations. It returns something like this:[ { course_id: 2490 } ]
-        const eval_results = await fetchEvaluations({course_id: course_id_result[0].course_id, order_by: order_by, asc: asc}); // error is caught inner function
+        const eval_results = await fetchEvaluations({course_id: course_id_result.course_id, order_by: order_by, asc: asc}); // error is caught inner function
         res.json(eval_results.rows);
+    } catch (error) {
+        res.status(500).send({error: (error as Error).message});
+        return;
     }
 }
 export const getCourseAggregateByCode = async (req: Request, res: Response): Promise<void> => {
-    // console.log('✅ Backend hit! query =', req.query.course_name);
+    /*
+        Gets course aggregate groupby professor
+     */
     debugger;
     const {course_name} = req.query;
+
     try{
         const result = await db.query(
             `
                 SELECT c.course_id, o.prof_id, CONCAT(p.first_name, ' ', p.last_name) AS prof_name, AVG(e.ins3) as INS3Avg, 
-                    AVG(e.ins6) AS INS6AVG, AVG(e.artsci3) AS ARTSCI3AVG, count(*) AS times_taught 
+                    AVG(e.ins6) AS INS6AVG, AVG(e.artsci1) AS ARTSCI1AVG, count(*) AS times_taught 
                 FROM courses c JOIN offerings o on c.course_id = o.course_id JOIN evaluations e on o.offering_id = e.offering_id 
                     NATURAL JOIN professors p WHERE LOWER(c.code) LIKE LOWER($1) 
                 GROUP BY c.course_id, o.prof_id, p.first_name, p.last_name ORDER BY count(*) DESC;
@@ -62,10 +70,7 @@ export const getCourseAggregateByCode = async (req: Request, res: Response): Pro
         res.status(500).json({ error: pgErr.message });
     }
     else {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Failed when calling getCourseAggregateByCode'});
         }
     }
-
-
 }
-
