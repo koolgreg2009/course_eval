@@ -27,7 +27,7 @@ interface BarChartProps {
     graphTruncate: boolean
 }
 export const BarChart = ({category, values, target, toggleGraphTruncate, graphTruncate}: BarChartProps) => {
-    const yMin: number = graphTruncate ? 3 : 0;
+    const yMin: number = graphTruncate ? 2.5 : 0;
     const stepSize: number = graphTruncate ? 0.5 : 1;
     const data =
     (category == "course" ?
