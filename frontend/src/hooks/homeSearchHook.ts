@@ -47,7 +47,8 @@ export const useHomeSearch = (mode: RootMode) => {
         try {
             // console.log(`Fetching: ${endpoint}?${prefix}=${query}`) // ?q= gets put into req.query.q
     //        console.log(`${endpoint}?${prefix}=${query}&order_by=year&asc=`);
-            const res = await fetch(`${endpoint}/search?${prefix}=${query}&order_by=year&asc=`); // empty asc so desc order
+            console.log(`${endpoint}/search?${prefix}=${query}&order_by=year&asc=`)
+            const res = await fetch(`${endpoint}?${prefix}=${query}&order_by=year&asc=`); // empty asc so desc order
  //           console.log(`${base_url}/api/log/search`);
             await fetch(`${base_url}/api/log/search`, {
                 method: 'POST',
