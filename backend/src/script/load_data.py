@@ -1,3 +1,5 @@
+from operator import truediv
+
 import psycopg2
 import pandas as pd
 import math
@@ -12,19 +14,24 @@ def safe_float(val):
 
 def safe_int(val):
     return None if pd.isna(val) or (isinstance(val, float) and math.isnan(val)) else int(val)
-
-df = pd.read_csv("../data/course_evals_data.csv")
-
-# conn = psycopg2.connect(
-#     os.environ.get("DATABASE_URL"),
-# )
+file = "Mock_Evaluation_Data__New_Courses___Professors_.csv"
+demo_data = True
+if demo_data:
+    table_prefix = "demo_"
+else:
+    table_prefix = ""
+df = pd.read_csv(f"../data/{file}")
 
 conn = psycopg2.connect(
-    host="localhost",
-    dbname="course_eval",
-    user="kevinhu",
-    password=""
+    os.environ.get("DATABASE_URL"),
 )
+
+# conn = psycopg2.connect(
+#     host="localhost",
+#     dbname="course_eval",
+#     user="kevinhu",
+#     password=""
+# )
 cur = conn.cursor()
 count = 0
 cols = [
@@ -45,17 +52,17 @@ for _, row in df.iterrows():
     try:
         # Insert prof. cuz of foreign key constraint if we insert a prof we need to insert its respective
         # id into offering. So we need to get prof_ID each time.
-        cur.execute("""
+        cur.execute(f"""
             SELECT prof_id 
-            FROM professors
+            FROM {table_prefix}professors
             WHERE first_name = %s AND last_name = %s
         """, (first_name, last_name))
         prof = cur.fetchone()
         if prof:
             prof_id =  prof[0]
         else:
-            cur.execute("""
-            INSERT INTO professors (first_name, last_name) 
+            cur.execute(f"""
+            INSERT INTO {table_prefix}professors (first_name, last_name) 
             VALUES (%s, %s) RETURNING prof_id
             """, (first_name, last_name))
             prof_id = cur.fetchone()[0]
@@ -79,41 +86,42 @@ for _, row in df.iterrows():
             title = title.replace(course_code, '').replace('-', '').strip()
 
     # Insert into courses table
-        cur.execute("""
-                    SELECT course_id FROM courses WHERE code = %s
+        cur.execute(f"""
+                    SELECT course_id FROM {table_prefix}courses WHERE code = %s
                     """, (course_code,))
         course = cur.fetchone()
         if course:
             course_id = course[0]
         else:
-            cur.execute("""
-                        INSERT INTO courses (department, code, title)
+            cur.execute(f"""
+                        INSERT INTO {table_prefix}courses (department, code, title)
                         VALUES (%s, %s, %s) RETURNING course_id
                         """, (dept, course_code, title))
             course_id = cur.fetchone()[0]
 
         # Insert into offerings table or get offering_id
 
-        cur.execute("""
+        cur.execute(f"""
                     SELECT offering_id 
-                    FROM offerings
+                    FROM {table_prefix}offerings
                     WHERE prof_id = %s AND course_id = %s AND year = %s AND semester = %s AND section = %s
                     """, (prof_id, course_id, year, term, course_section))
         offering = cur.fetchone()
         if offering:
             offering_id = offering[0]
         else:
-            cur.execute("""
-                        INSERT INTO offerings (prof_id, course_id, section, year, semester)
+            cur.execute(f"""
+                        INSERT INTO {table_prefix}offerings (prof_id, course_id, section, year, semester)
                         VALUES (%s, %s, %s, %s, %s) RETURNING offering_id
                         """, (prof_id, course_id, course_section, year, term))
             offering_id = cur.fetchone()[0]
 
         #. Insert evaluation
-        cur.execute("""
-                    INSERT INTO evaluations (
+        # render version has num_invited and num_responded while local has invited and responded
+        cur.execute(f"""
+                    INSERT INTO {table_prefix}evaluations (
                         offering_id, ins1, ins2, ins3, ins4, ins5, ins6,
-                        artsci1, artsci2, artsci3, invited, responded
+                        artsci1, artsci2, artsci3, num_invited, num_responded
                     )
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """, (
