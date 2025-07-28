@@ -21,7 +21,7 @@ export const useHomeSearch = (mode: RootMode) => {
     const endpoint: string = `${base_url}/api/${mode.category}s/${mode.view}`;
     const [error, setError] = useState<string | null>(null);
     const [showHint, setShowHint] = useState(true);
-
+    const [demo, setDemo] = useState(true);
     /*
     This is state to hold whether graph should be displayed truncatedly or not
      */
@@ -45,15 +45,27 @@ export const useHomeSearch = (mode: RootMode) => {
         setBarResults([]);
     }, [mode.category])
 
+    // set up the global listener once for toggle d
+    useEffect(() => {
+        function handleKeyDown(e: KeyboardEvent) {
+            if (e.metaKey && e.shiftKey && e.key === "/") {
+                e.preventDefault();
+                setDemo(prev => !prev);
+                console.log("demo toggled");
+            }
+        }
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
     const handleSearch = async (search_category: Category, search_view: View, search_term: String) => {
         console.log("search hit in frontend");
         if (!query.trim()) return;
         setError(null);
+            console.log(`search demo: ${demo}`);
         try {
-            // console.log(`Fetching: ${endpoint}?${prefix}=${query}`) // ?q= gets put into req.query.q
-    //        console.log(`${endpoint}?${prefix}=${query}&order_by=year&asc=`);
             console.log(`${endpoint}/search?${prefix}=${query}&order_by=year&asc=`)
-            const res = await fetch(`${endpoint}?${prefix}=${query}&order_by=year&asc=`); // empty asc so desc order
+            const res = await fetch(`${endpoint}?${prefix}=${query}&order_by=year&asc=&demo=${demo}`); // empty asc so desc order
  //           console.log(`${base_url}/api/log/search`);
             await fetch(`${base_url}/api/log/search`, {
                 method: 'POST',
@@ -62,6 +74,7 @@ export const useHomeSearch = (mode: RootMode) => {
             })
             const data = await res.json(); // safe to parse
             if (!res.ok) {
+                // This catches error from log/search
                 console.log(data);
                 setError(data.error);
                 return;
@@ -91,7 +104,7 @@ export const useHomeSearch = (mode: RootMode) => {
                 Rn query is being set in the tsx file. logic in tsx file: if mode is course then set pass courseid
                  */
                 // @ts-ignore
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/evals/search?course_id=${course_id}&prof_id=${prof_id}&order_by=year&asc=`);
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/evals/search?course_id=${course_id}&prof_id=${prof_id}&order_by=year&asc=&demo=${demo}`);
                 const data = await res.json();
                 setEvals(prev => ({
                     ...prev,
@@ -117,7 +130,7 @@ export const useHomeSearch = (mode: RootMode) => {
          */
         try {
             console.log(`${base_url}/api/evals/bar?target=${query}&category=${mode.category}`);
-            const result = await fetch(`${base_url}/api/evals/bar?target=${query}&category=${mode.category}`);
+            const result = await fetch(`${base_url}/api/evals/bar?target=${query}&category=${mode.category}&demo=${demo}`);
             const data = await result.json();
 
             setBarResults(Object.values(data.rows[0]));
@@ -129,6 +142,12 @@ export const useHomeSearch = (mode: RootMode) => {
 
         }
     }
+    /*
+        Called by toggle mode
+     */
+        const demoToggle = () => {
+            setDemo(prev => !prev);
+        };
     return {
         query, setQuery,
         results, setResults,
@@ -138,8 +157,10 @@ export const useHomeSearch = (mode: RootMode) => {
         selectedItem, setSelectedItem,
         endpoint,
         showHint,
+        demo,
         handleSearch,
         fetchCourseEvals,
         graphTruncate, toggleGraphTruncate,
+        demoToggle,
     };
 }

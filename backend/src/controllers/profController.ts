@@ -2,14 +2,15 @@ import { Request, Response } from 'express';
 import db from '../db';
 import {fetchEvaluations,} from "./evalController";
 
-export async function getProfByName(prof_name: string){
+export async function getProfByName(prof_name: string, tablePrefix: string){
     /*
        Retrieves prof_id based on input string. Returns prof_id if there is 1 result. Else raise error.
      */
+
     console.log("in getProfByName");
     const result = await db.query(`
                 SELECT p.prof_id
-                FROM professors p
+                FROM ${tablePrefix}professors p
                 WHERE LOWER(CONCAT(p.first_name, ' ', p.last_name)) LIKE LOWER($1);
         `,
         [`%${prof_name}%`]);
@@ -23,11 +24,13 @@ export async function getProfByName(prof_name: string){
 }
 
 export const getCourseEvalByProfName = async (req: Request, res: Response) => {
-    const {prof_name, order_by, asc} = req.query;
-    const prof_id_result = await getProfByName(String(prof_name));
+    const {prof_name, order_by, asc, demo} = req.query;
+    const tablePrefix: string = demo === "true" ? "demo_" : ""
+
+    const prof_id_result = await getProfByName(String(prof_name), tablePrefix);
 
     try{
-        const eval_result = await fetchEvaluations({prof_id: prof_id_result.prof_id, order_by: order_by, asc: asc});
+        const eval_result = await fetchEvaluations({prof_id: prof_id_result.prof_id, order_by: order_by, asc: asc, demo: String(demo)});
         res.json(eval_result.rows);
     } catch(error){
         console.log("getCourseEval failed")
@@ -42,16 +45,9 @@ export const getProfByCode = async (req: Request, res: Response) => {
      */
     debugger;
 //    console.log('✅ Backend hit in prof! query =', req.query.prof_name);
-    const {prof_name} = req.query;
-    // const prof_id_result = await getProfByName(String(prof_name));
-    // if (prof_id_result.length > 1){
-    //     res.status(400).json({error: 'Ambiguous: Input maps to multiple results'});
-    //     return;
-    // } else if(prof_id_result.length === 0){
-    //     res.status(400).json({error: 'Unknown professor'});
-    //     return;
-    // }
-    // else {
+    const {prof_name, demo} = req.query;
+    const tablePrefix: string = demo === "true" ? "demo_" : ""
+
     try {
         const result = await db.query(
             `
@@ -63,10 +59,10 @@ export const getProfByCode = async (req: Request, res: Response) => {
                        AVG(e.ins6)                            AS INS6AVG,
                        AVG(e.artsci1)                         AS ARTSCI1AVG,
                        COUNT(*)                               AS times_taught
-                FROM courses c
-                         JOIN offerings o ON c.course_id = o.course_id
-                         JOIN evaluations e ON o.offering_id = e.offering_id
-                         NATURAL JOIN professors p
+                FROM ${tablePrefix}courses c
+                         JOIN ${tablePrefix}offerings o ON c.course_id = o.course_id
+                         JOIN ${tablePrefix}evaluations e ON o.offering_id = e.offering_id
+                         NATURAL JOIN ${tablePrefix}professors p
                 WHERE CONCAT(LOWER(p.first_name), ' ', LOWER(p.last_name)) LIKE LOWER($1)
                 GROUP BY p.prof_id, c.course_id, c.code, p.first_name, p.last_name
                 ORDER BY COUNT(*) DESC;`,
