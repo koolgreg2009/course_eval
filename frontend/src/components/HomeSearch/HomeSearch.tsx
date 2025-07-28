@@ -20,7 +20,8 @@ const {
     handleSearch,
     fetchCourseEvals,
     showHint,
-    graphTruncate, toggleGraphTruncate
+    demo,
+    graphTruncate, toggleGraphTruncate, demoToggle
 } = useHomeSearch(mode);
 
     //const instateEvals = evals[selectedItem!.course_id]?.[selectedItem!.prof_id] ?? [];
@@ -54,7 +55,6 @@ const {
     return (
         <div className="min-h-screen flex flex-col bg-base-100 text-base-content">
             <main className="flex-grow px-4 py-20">
-
                 {/* Centered heading and search input */}
                 <div className="flex flex-col items-center">
                     <h1 className="text-3xl font-bold mb-8">search</h1>
@@ -67,7 +67,7 @@ const {
                         error={error}
                     />
                 </div>
-                {results.length > 0 && (
+                {barResults.length > 0 && (
                     <BarChart
                         category={mode["category"]}
                         values={barResults}
@@ -137,7 +137,7 @@ const {
 
             {/* Page footer */}
             <footer className="w-full p-8 text-center">
-                {showHint && (
+                {showHint && !demo && (
                     <div style={{ marginTop: '2rem', textAlign: 'center' }}>
                         <b>Please note:</b>
                         <ul className="list-disc list-inside">
@@ -148,7 +148,28 @@ const {
                             <li>Data is collected from U of T Course Evaluations. I do not take responsibility of what you do with this data.</li>
                         </ul>
                     </div>
-                )}
+                )
+                }
+                {
+                    demo &&
+                    (
+                        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+                            <b>Mock Courses:</b>
+                            <ul className="list-disc list-inside">
+                                <li>CSC777</li>
+                                <li>MAT888</li>
+                                <li>PHY999</li>
+                            </ul>
+                            <b>Mock Professors:</b>
+                            <ul className="list-disc list-inside">
+                                <li>John Smith</li>
+                                <li>Anita Kaur</li>
+                                <li>Wei Zhao</li>
+                            </ul>
+                            <p>I do not have real course eval data sorry D:</p>
+                        </div>
+                    )
+                }
             </footer>
         </div>
     );

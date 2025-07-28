@@ -1,18 +1,21 @@
 import db from "../db";
-import {Request, Response} from "express";
+import {Request, Response, NextFunction} from "express";
 import {Category, View} from "../utils/typeDef"
+import { AppError } from '../utils/AppError';
 
 export const logSearch = async (search_category: Category, search_view: View, search_term: string) => {
-
-    await db.query(
-        `
-    INSERT INTO search_log(search_category, search_view, search_term) 
-    VALUES ($1, $2, $3)
-    `, [search_category, search_view, search_term]);
-
+    try {
+        await db.query(
+            `
+                INSERT INTO search_log(search_category, search_view, search_term)
+                VALUES ($1, $2, $3)
+            `, [search_category, search_view, search_term]);
+    } catch (error) {
+        throw new AppError('Failed writing to log table in logSearch');
+    }
 }
 
-export const logSearchHTTP = async (req: Request, res: Response) => {
+export const logSearchHTTP = async (req: Request, res: Response, next: NextFunction) => {
     console.log("LOGSEARCH HIT");
     try{
         const {search_category, search_view, search_term} = req.body
@@ -21,7 +24,7 @@ export const logSearchHTTP = async (req: Request, res: Response) => {
         res.status(200).send("Logged");
     } catch(error){
         // console.error("Error logging search", error);
-        res.status(500).send("Error logging search");
+        next(error)
     }
 
 }
