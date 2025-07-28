@@ -1,6 +1,7 @@
-import { Request, Response } from 'express';
+import {NextFunction, Request, Response} from 'express';
 import db from '../db';
 import {fetchEvaluations} from './evalController';
+import { AppError } from '../utils/AppError';
 
 export async function getCourseByCode(course_name: string, tablePrefix: string){
     /*
@@ -15,14 +16,14 @@ export async function getCourseByCode(course_name: string, tablePrefix: string){
         `,
         [`%${course_name}%`]);
     if (result.rows.length > 1){
-        throw new Error('Ambiguous: Input maps to multiple results')
+        throw new AppError('Ambiguous: Input maps to multiple results', 409)
     } else if (result.rows.length == 0){
-        throw new Error('Unknown course code')
+        throw new AppError('Unknown course code', 404)
     }
     // so result is size 1
     return result.rows[0];
 }
-export const getCourseEvalByCode = async (req: Request, res: Response) => {
+export const getCourseEvalByCode = async (req: Request, res: Response, next: NextFunction) => {
     /*
         Gets course eval by a string of course name. Calls getCoursebycode to retrieve course id then uses it to
         fetch evaluations. This is to be called by when category = course, view = evals
@@ -37,11 +38,10 @@ export const getCourseEvalByCode = async (req: Request, res: Response) => {
         const eval_results = await fetchEvaluations({course_id: course_id_result.course_id, order_by: order_by, asc: asc, demo: String(demo)}); // error is caught inner function
         res.json(eval_results.rows);
     } catch (error) {
-        res.status(500).send({error: (error as Error).message});
-        return;
+        next(error)
     }
 }
-export const getCourseAggregateByCode = async (req: Request, res: Response): Promise<void> => {
+export const getCourseAggregateByCode = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     /*
         Gets course aggregate groupby professor
      */
@@ -61,21 +61,18 @@ export const getCourseAggregateByCode = async (req: Request, res: Response): Pro
             [`%${course_name}%`]
         );
         if(result.rows.length == 0){
-            res.status(400).json({error: 'Unknown course code'});
-            return;
+            return next(new AppError('Unknown course code', 404));
         }
         res.json(result.rows); // return as a json array
     }  catch (err) {
         if (err instanceof Error && 'code' in err) {
-            const pgErr = err as any; // or define a better type if you want
+            const pgErr = err as any; // could make a type later
+            console.error('PostgreSQL error:', pgErr.message, 'Code:', pgErr.code);
 
-            console.error('PostgreSQL error:', pgErr.message);
-            console.error('Code:', pgErr.code); // e.g., '23505' for unique_violation
+            return next(new AppError('Database query failed')); // generic error
+        }
 
-            res.status(500).json({ error: pgErr.message });
-        }
-        else {
-            res.status(500).json({ error: 'Failed when calling getCourseAggregateByCode'});
-        }
+        return next(new AppError('Failed when calling getCourseAggregateByCode'));
     }
+
 }

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {ErrorRequestHandler} from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import courseRoutes from './routes/courseRoutes';
@@ -6,6 +6,8 @@ import professorRoutes from './routes/profRoutes';
 import evalRoutes from "./routes/evalRoutes";
 import path from 'path';
 import logRoutes from "./routes/logRoutes";
+import { Request, Response, NextFunction } from 'express';
+import {AppError} from "./utils/AppError";
 
 dotenv.config();
 
@@ -30,11 +32,27 @@ app.get('/', (_req, res) => {
     res.send('Welcome to the Course Evaluation API');
 });
 
+
 app.use(express.static(path.join(__dirname, '../../frontend/dist'))); // serves all static assets (JS, CSS, images)
 
 app.get('/{*any}', (_req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/dist', 'index.html')); // app.get('*') catch-all returns index.html for React Router
 });
+
+// global error catcher.
+const errorHandler: ErrorRequestHandler = (err, req, res, _next): void => {
+    if (err instanceof AppError) {
+        res.status(err.status).json({ error: err.message });
+        return;
+    }
+
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+};
+
+app.use(errorHandler);
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

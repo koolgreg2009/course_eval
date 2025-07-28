@@ -1,7 +1,10 @@
 import db from '../db';
-import {Request, Response} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import {getProfByName} from './profController'
 import {getCourseByCode} from './courseController'
+import { AppError } from '../utils/AppError';
+
+
 export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any; year?: any; order_by?: any; asc?: any; demo:string })=> {
     /**
      *  Pre-Cond:
@@ -59,7 +62,7 @@ export const fetchEvaluations = async (filters: { course_id?: any, prof_id?: any
     return await db.query(sql, values);
 
 }
-export const getEvaluations = async (req: Request, res: Response) => {
+export const getEvaluations = async (req: Request, res: Response, next: NextFunction) => {
     /*
     Separate function just to handle http req
      */
@@ -69,11 +72,11 @@ export const getEvaluations = async (req: Request, res: Response) => {
         res.json(result);
     } catch(err){
         // console.error(err);
-        res.status(500).json({ error: 'Failed when calling getEvaluations' });
+        throw new AppError( 'Failed when calling getEvaluations' );
     }
 }
 
-export const getCourseAggregate = async (req: Request, res: Response) => {
+export const getCourseAggregate = async (req: Request, res: Response, next: NextFunction) => {
     /*
     This function does a groupby of all evaluations and then returns the averaged ins and artsci values.
      */
@@ -96,7 +99,7 @@ export const getCourseAggregate = async (req: Request, res: Response) => {
     }
 
     if (!allowedGroupBys.includes(groupby)) {
-        throw new Error('Invalid groupby');
+        throw new AppError('Invalid groupby');
     }
 
     const sql =
@@ -116,8 +119,7 @@ export const getCourseAggregate = async (req: Request, res: Response) => {
     } catch(err){
         // console.error(err);
         console.log(`failed when calling ${sql}`)
-        res.status(500).json({ error: 'Failed when calling getCourseAggregate' });
-        return;
+        next(err)
     }
 }
 

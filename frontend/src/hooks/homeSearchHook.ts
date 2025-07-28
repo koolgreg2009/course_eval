@@ -84,7 +84,8 @@ export const useHomeSearch = (mode: RootMode) => {
             setShowHint(false);
             setResults(data);
         } catch (err) {
-            setError(err instanceof Error ? `Failed calling handleSearch ${err.message}` : "Something went wrong");
+            console.log("Error in handlesearch");
+            console.log(error);
         }
     };
 

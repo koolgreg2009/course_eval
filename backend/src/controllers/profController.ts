@@ -1,6 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import db from '../db';
 import {fetchEvaluations,} from "./evalController";
+import { AppError } from '../utils/AppError';
+
 
 export async function getProfByName(prof_name: string, tablePrefix: string){
     /*
@@ -14,16 +16,17 @@ export async function getProfByName(prof_name: string, tablePrefix: string){
                 WHERE LOWER(CONCAT(p.first_name, ' ', p.last_name)) LIKE LOWER($1);
         `,
         [`%${prof_name}%`]);
+    console.log(`Number of professors: ${result.rows.length}`);
     if (result.rows.length > 1){
-        throw new Error('Ambiguous: Input maps to multiple results');
+        throw new AppError('Ambiguous: Input maps to multiple results', 409);
     } else if(result.rows.length === 0) {
-        throw new Error('Unknown professor');
+        throw new AppError('Unknown professor', 404);
     }
     return result.rows[0];
 
 }
 
-export const getCourseEvalByProfName = async (req: Request, res: Response) => {
+export const getCourseEvalByProfName = async (req: Request, res: Response, next: NextFunction) => {
     const {prof_name, order_by, asc, demo} = req.query;
     const tablePrefix: string = demo === "true" ? "demo_" : ""
 
@@ -34,12 +37,11 @@ export const getCourseEvalByProfName = async (req: Request, res: Response) => {
         res.json(eval_result.rows);
     } catch(error){
         console.log("getCourseEval failed")
-        res.status(500).send({error: (error as Error).message});
-        return;
+        next(error);
     }
 
 }
-export const getProfByCode = async (req: Request, res: Response) => {
+export const getProfByCode = async (req: Request, res: Response, next: NextFunction) => {
     /**
      * Searches for a prof by name. Returns some aggregational statistics of them
      */
@@ -70,17 +72,6 @@ export const getProfByCode = async (req: Request, res: Response) => {
         );
         res.json(result.rows);
     } catch (err) {
-        if (err instanceof Error && 'code' in err) {
-            const pgErr = err as any; // or define a better type if you want
-
-            console.error('PostgreSQL error:', pgErr.message);
-            console.error('Code:', pgErr.code); // e.g., '23505' for unique_violation
-
-            res.status(500).json({error: pgErr.message});
-        } else {
-            console.error('Unknown error:', err);
-            res.status(500).json({error: 'Failed when calling getProfByCode'});
-        }
+        throw new AppError("Failed in getProfByCode")
     }
-    //}
 }
