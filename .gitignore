@@ -1,6 +1,5 @@
 backend/.env
 frontend/.env
-explore
 .idea
 node_modules
 .venv
