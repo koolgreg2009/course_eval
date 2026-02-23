@@ -19,8 +19,8 @@ A full stack web app for exploring University of Toronto course evaluation data 
   - Show summary metrics instead of only raw evaluations
   - Make course/prof comparisons easier
 
-- **(Optional) Demo mode**
-  - Supports a demo dataset for testing/showcasing the app
+- **Demo mode**
+  - Default is demo mode, press command/control + shift + '/' to toggle to 2025 data. 
 
 
 
